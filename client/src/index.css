@@ -1,0 +1,7 @@
+@import 'rsuite/DateRangePicker/styles';
+@import 'datepickercustomstyle.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+  

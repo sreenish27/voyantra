@@ -1,0 +1,41 @@
+.rs-input-group {
+    @apply border-black h-[60px] w-[50px];
+}
+
+.rs-picker-default {
+    box-shadow: none !important;
+    @apply w-[0px];
+}
+
+
+.rs-picker-popup{
+    @apply rounded-custom origin-center;
+}
+
+.rs-picker-header-date{
+    @apply text-white;
+}
+
+.rs-picker-header-character{
+    @apply text-white;
+}
+
+.rs-calendar-body{
+    @apply h-[424px] w-[350px];
+}
+
+.rs-date-range-input{
+    @apply bg-transparent;
+}
+
+.rs-input{
+    @apply bg-transparent;
+}
+
+.rs-picker-caret-icon{
+    @apply stroke-white fill-white; 
+}
+
+.rs-picker-icon{
+    @apply stroke-white; 
+}
