@@ -1,16 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import { useSelector } from 'react-redux';
+import React, {useState, useEffect, useRef} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsOpen } from '../reduxSlices/datePickerOpenCloseSlice.js';
 
 const SearchBar = () => {
 
+    const dispatch = useDispatch();
 
     const [isWhoDropdownOpen, setIsWhoDropdownOpen] = useState(false);
 
     const [isWhereDropdownOpen, setIsWhereDropdownOpen] = useState(false);
 
-    // //handles the dates in the From and To part of the search bar - this is using redux (global state management package)
-    // const isStartDate = useSelector((state) => state.dateRanges.isStartDate);
-    // const isEndDate = useSelector((state) => state.dateRanges.isEndDate);
+    //handle dates in the from and to part of searchbar using redux (global state management system)
+    const startDate = useSelector((state) => state.dateRangePicker.startDate);
+    const endDate = useSelector((state) => state.dateRangePicker.endDate);
+
+    //handles the opening and closing of the datePicker component
+    const isOpen = useSelector((state) => state.datePickerOpenClose.isOpen);
 
     //To handle all the clicks in the Who dropdown
     const [isAdultClicked, setIsAdultClicked] = useState(0);
@@ -21,8 +26,15 @@ const SearchBar = () => {
     //When user starts typing in the Where search bar it must open
     const [isUserSearchingDestinations, setIsUserSearchingDestinations] = useState(null);
 
-    //When user starts typing the place store, update and clear the data
+    //When user starts typing the place - store, update and clear the data
     const [isPlaceData, setIsPlaceData] = useState([]);
+
+    //When user starts adding the people going for the trip store it as an array
+    const [isGuestData, setIsGuestData] = useState('');
+
+    //When the user selects a place I want it to be stored in this variable
+    const [isDestinationDataDisplay, setIsDestinationDataDisplay] = useState('');
+    const destinationDisplayRef = useRef(null);
 
     useEffect(() => {
         if(isUserSearchingDestinations != ''){
@@ -34,7 +46,7 @@ const SearchBar = () => {
                     const place_data = await response.json();
                     setIsPlaceData(place_data);
                 } catch(err){
-                    console.log(`Error is trying to get the places:${err}`);
+                    console.log(`Error in trying to get the places:${err}`);
                 }
             };
 
@@ -43,6 +55,32 @@ const SearchBar = () => {
             setIsPlaceData([]);
         }
     }, [isUserSearchingDestinations]);
+
+   //handle the input value that should be displayed in Add guests in the search bar
+   useEffect(() => {
+    if (isAdultClicked+isChildrenClicked === 0 && isInfantClicked === 0 && isPetClicked === 0){
+        setIsGuestData("");
+    }
+    else if(isAdultClicked+isChildrenClicked > 0 && isInfantClicked === 0 && isPetClicked === 0){
+        setIsGuestData(`${isAdultClicked+isChildrenClicked} guests`);
+    }
+    else if(isAdultClicked+isChildrenClicked > 0 && isInfantClicked>0 && isPetClicked === 0){
+        setIsGuestData(`${isAdultClicked+isChildrenClicked} guests, ${isInfantClicked} infants`);
+    }
+    else {
+        setIsGuestData(`${isAdultClicked+isChildrenClicked} guests, ${isInfantClicked} infants, ${isPetClicked} pets`);
+    }
+   },[isAdultClicked, isChildrenClicked, isInfantClicked, isPetClicked]);
+
+   //handle giving the clicked place data to the variable declared which will be displayed
+
+   const handlerDisplayPlaceData = (event) => {
+
+    destinationDisplayRef.current = event.target;
+    const destinationDisplayValue = destinationDisplayRef.current.textContent;
+    setIsDestinationDataDisplay(destinationDisplayValue);
+    setIsUserSearchingDestinations(destinationDisplayValue);
+   }
 
     //Handle the where search bar dropdown for Click
     const handlerWhereDropdownClick = () => {
@@ -152,6 +190,12 @@ const SearchBar = () => {
         
     }
 
+    //handles the opening and closing of the date picker toggle from from and to
+    const handleDatePickerOpenClose = () => {
+
+        dispatch(setIsOpen(!isOpen));
+    }
+
     return(
         <>
         <div className = "flex flex-row justify-center w-full">
@@ -174,24 +218,23 @@ const SearchBar = () => {
                 </form>
             </button>
             
-            
-            <button className = "hover:bg-gray-100 px-5 py-2 rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
+            <button onClick={handleDatePickerOpenClose} className = "hover:bg-gray-100 px-5 py-2 rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
                 <div className="relative right-[42px]">From</div>
-                <input className="relative right-[-13px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Enter start date" value="dcda" readOnly/>
+                <input className="relative right-[-14px] text-black font-light hover:bg-gray-100" type="text" placeholder="Enter start date" value={startDate} readOnly/>
                 </button>
           
-            <button className = "hover:bg-gray-100 px-5 py-2 rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-                <div className="relative right-[38px]">To</div>
-                <input className="relative right-[-13px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Enter end date" value="dcda" readOnly/>
+            <button onClick={handleDatePickerOpenClose} className = "hover:bg-gray-100 px-5 py-2 rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
+                <div className="relative right-[49px]">To</div>
+                <input className="relative right-[-14px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Enter end date" value={endDate} readOnly/>
                 </button>
 
             <div className="flex flex-row hover:bg-gray-100 px-5 py-2 w-[250px] rounded-subSearchBox">
-                <button onClick={handlerWhoDropdownClick} className = "text-gray-700 font-normal text-sm" type="button">Who
-                <div className = "relative right-[-21px] text-gray-400 font-light text-sm">Add guests</div>
+                <button onClick={handlerWhoDropdownClick} className = "relative right-[50px] text-gray-700 font-normal text-sm" type="button">Who
+                <input className="relative right-[-58px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Add guests" readOnly value={isGuestData}/>
                 </button>
              
             <div>
-                <div className = "relative">
+                <div className = "relative right-[81px]">
                 <button>
                 <svg className = "relative right-[-95px] top-[-3px] fill-sky-500 hover:fill-sky-700" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55px" height="55px" viewBox="0 0 25.334 25.334" xml:space="preserve"> <g><path d="M25.334,12.667c0,6.996-5.672,12.667-12.668,12.667C5.672,25.334,0,19.663,0,12.667S5.672,0,12.666,0,C19.662,0,25.334,5.671,25.334,12.667z"/></g></svg>
                 
@@ -206,7 +249,7 @@ const SearchBar = () => {
         </div>
 
         {isWhoDropdownOpen && (
-            <div className="absolute top-[180px] right-[320px] w-[350px] h-72 z-10 mt-2 origin-top-right rounded-custom bg-white px-3 py-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+            <div className="absolute top-[180px] right-[180px] w-[350px] h-72 z-10 mt-2 origin-top-right rounded-custom bg-white px-3 py-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
             
             
             <div className="py-3 px-3 h-[70px]" role="none">
@@ -283,23 +326,23 @@ const SearchBar = () => {
             <div className="absolute top-[182px] right-[640px] z-10 mt-2 w-[370px] origin-top-right rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">     
             
             
-            <button className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
+            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
                 <div className="relative justify-start text-gray-700 font-light text-[17px]">{isPlaceData[0].display_name}</div>
             </button>
 
-            <button className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
+            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
                 <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[1].display_name}</div>
             </button>
 
-            <button className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
+            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
                 <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[2].display_name}</div>
             </button>
 
-            <button className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
+            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
                 <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[3].display_name}</div>
             </button>
 
-            <button className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
+            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
                 <div className="relative text-gray-700 font-light text-[17px]">{isPlaceData[4].display_name}</div>
             </button>
 

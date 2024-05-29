@@ -1,5 +1,5 @@
 .rs-input-group {
-    @apply border-black h-[60px] w-[50px];
+    @apply border-white h-[60px] w-[50px];
 }
 
 .rs-picker-default {

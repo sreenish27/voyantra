@@ -1,21 +1,21 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const dateRangePickerSlice = createSlice({
-    name:'dateRangePicker',
-    initialState:{
-        isStartDate:'',
-        isEndDate:'',
+    name: 'dateRangePicker',
+    initialState: {
+        startDate: '',
+        endDate: '',
     },
-    reducer:{
-        setIsStartDate: (state, action) => {
-            state.isStartDate = action.payload;
+
+    reducers:{
+        setStartDate(state, action){
+            state.startDate = action.payload;
         },
-        setIsEndDate: (state, action) => {
-            state.isEndDate = action.payload;
+        setEndDate(state, action){
+            state.endDate = action.payload;
         },
     },
 });
 
-export const {setIsStartDate, setIsEndDate} = dateRangePickerSlice.actions;
-
+export const { setStartDate, setEndDate } = dateRangePickerSlice.actions;
 export default dateRangePickerSlice.reducer;

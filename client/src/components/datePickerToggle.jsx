@@ -1,37 +1,42 @@
-import React, {useState} from 'react';
+import React, {useRef} from 'react';
 import { DateRangePicker } from 'rsuite';
-import { parse, format } from 'date-fns';
+import { format } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
+import { setEndDate, setStartDate } from '../reduxSlices/dateRangePickerSlice.js';
+
+
 
 const { combine, allowedMaxDays, beforeToday } = DateRangePicker;
 
 const DatePickerToggle = () => {
 
-    const [isStartDate, setIsStartDate] = useState(null);
-    const [isEndDate, setIsEndDate] = useState(null);
+    const dispatch = useDispatch();
 
-    
+    const isOpen = useSelector((state) => state.datePickerOpenClose.isOpen);
+
 
     const handleDateChange = (value) => {
 
-        setIsStartDate(value[0]);
-        setIsEndDate(value[1]);
+        if(value && value.length === 2){
+            const parsedstartDate = new Date(value[0]);
+            const startDate = format(parsedstartDate, 'MMMM dd');
+
+            const parsedendDate = new Date(value[1]);
+            const endDate = format(parsedendDate, 'MMMM dd');
+
+            dispatch(setStartDate(startDate));
+            dispatch(setEndDate(endDate));
+        }
+        
     }
-
-    // //Formatting start date to "Month day"
-    // const parsedStartDate = parse(isStartDate, 'yyyy-MM-dd', new Date());
-    // const formattedStartDate = format(parsedStartDate, 'MMMM dd');
-
-    // //Formatting end date to "Month day"
-    // const parsedEndDate = parse(isEndDate, 'yyyy-MM-dd', new Date());
-    // const formattedEndDate = format(parsedEndDate, 'MMMM dd');
     
-
     return (
         <>
-        <div className="relative right-[20px] top-[380px] transform rotate-90">
-        <DateRangePicker onChange={handleDateChange}
+        <div className="relative right-[200px] top-[380px] transform rotate-90">
+        <DateRangePicker onChange={handleDateChange} onOk = {handleDateChange}
         className="rounded-lg shadow-lg"
         placeholder = " "
+        open={isOpen}
         shouldDisableDate={combine(allowedMaxDays(332), beforeToday())}
         />
         </div>
@@ -41,4 +46,3 @@ const DatePickerToggle = () => {
 
 
 export default DatePickerToggle;
-// export {formattedStartDate,formattedEndDate};
