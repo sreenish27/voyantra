@@ -1,8 +1,9 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import { DateRangePicker } from 'rsuite';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDate, setStartDate } from '../reduxSlices/dateRangePickerSlice.js';
+import { setIsOpen } from '../reduxSlices/datePickerOpenCloseSlice.js';
 
 
 
@@ -13,7 +14,6 @@ const DatePickerToggle = () => {
     const dispatch = useDispatch();
 
     const isOpen = useSelector((state) => state.datePickerOpenClose.isOpen);
-
 
     const handleDateChange = (value) => {
 
@@ -26,7 +26,10 @@ const DatePickerToggle = () => {
 
             dispatch(setStartDate(startDate));
             dispatch(setEndDate(endDate));
+
         }
+
+        dispatch(setIsOpen(!isOpen));
         
     }
     
