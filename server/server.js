@@ -2,9 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import {DB_CONNECTION, PORT} from './config.js';
-import getAllFlightData from './controller/flightDataController.js';
+import FlightDataController from './controller/flightDataController.js';
 import { setRawUserInput, getRawUserInput } from './userInputStore.js';
-
+import processUserInput from './handleUserInput.js';
+import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
 
 export const app = express();
 
@@ -32,9 +33,6 @@ app.get('/', (req, res) => {
     res.send(`Welcome to Voyantra!`);
 });
 
-// import { globaluserinput } from './config.js';
-
-
 //recieve all user input from client side
 app.post('/api/userInput', (req, res) => {
 
@@ -48,6 +46,13 @@ app.post('/api/userInput', (req, res) => {
 
     res.setHeader('Content-Type','application/json');
     res.send(`Here is the user input:${getRawUserInput()}`);
+    try{
+        setApiReadyInput(processUserInput(getRawUserInput()));
+        console.log(getApiReadyUserInput());
+    } catch(err){
+        console.log(`Error in processing user input: ${err}`);
+        throw err;
+    }
 });
 
 
@@ -57,7 +62,8 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.get('/api/testing', async (req, res) => {
-    const output = await getAllFlightData();
+    const processedInput = getApiReadyUserInput();
+    const output = await FlightDataController(processedInput);
     res.send(output);
 });
 

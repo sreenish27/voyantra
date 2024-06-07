@@ -1,9 +1,9 @@
 import { amadeusObj } from "../config.js";
-import { getApiReadyUserInput } from "../apiReadyUserInputStore.js";
 
-const apireadyuserinput = getApiReadyUserInput();
 
-const FlightDataController = async () => {
+const FlightDataController = async (apireadyuserinput) => {
+
+    let originIATA, destinationIATA;
 
     const maxResponses = 10;
     const purchaseCurrency = 'USD';
@@ -20,8 +20,6 @@ const FlightDataController = async () => {
     const originLocation = apireadyuserinput.fromLocation;
     const destinationLocation = apireadyuserinput.toLocation;
 
-
-
     const getLatLon = async (x) => {
 
         //we will process the from and to locations to get the IATA code to be passed to our API calls
@@ -30,25 +28,32 @@ const FlightDataController = async () => {
         try{
             const response = await fetch(locationData);
             const fullData = await response.json()
-            const latData = fullData.lat;
-            const lonData = fullData.lon;
+            // const latData = Number(fullData.lat);
+            // const lonData = Number(fullData.lon);
+            return fullData;
 
-            return {lonData, latData};
+            // return {lonData, latData};
         } catch(err) {
             console.log(`Error in getting the latitude and longitude ${err}`);
         }
         
     }
 
-    //The Latitude and Longitudes of Origin Location
-    const originGeoData = await getLatLon(originLocation);
-    const originLongitude = originGeoData.lonData;
-    const originLatitude = originGeoData.latData;
+    // //a function to store the location data and then access it from here so that I can avoid any issues with the async await structure of data retreival from API calls
+    // const setLocationData = (location) => {
+    //     const finalLocationData = location;
+    //     return finalLocationData;
+    // }
 
-    //The Latitude and Longitudes of Destination Location
-    const destinationGeoData = await getLatLon(destinationLocation);
-    const destinationLongitude = destinationGeoData.lonData;
-    const destinationLatitude = destinationGeoData.latData;
+    const getFinalLatLon = async (placeData) => {
+        const finalLocationData = await getLatLon(placeData);
+        const latData = Number(finalLocationData[0].lat);
+        const lonData = Number(finalLocationData[0].lon);
+
+        return{lonData, latData};
+    }
+
+    
 
     //retreive the nearest airports IATA codes for both from and to locations
     const getNearestAirportIATA = async (latitudeData, longitudeData) => {
@@ -57,40 +62,96 @@ const FlightDataController = async () => {
             const response = await amadeusObj.referenceData.locations.airports.get({
                 latitude:latitudeData,
                 longitude:longitudeData
-            })
-            return response[0].iatacode;
+            });
+            // if(response && response.data && response.data.length > 0){
+            //     const nearestAirport = response.data[0];
+            //     const iatacode = nearestAirport.iataCode;
+            //     return iatacode;
+            // }
+            // else{
+            //     console.log(`No lat, lon data to return the IATA code`)
+            // }
+            return response;
+            
         } catch (err) {
             console.log(`Error while retrieving the IATA code of nearest airports for given location: ${err}`);
         }
     }
 
-    //Getting the IATA code for origin and destination
-    const originIATA = await getNearestAirportIATA(originLatitude, originLongitude);
-    const destinationIATA = await getNearestAirportIATA(destinationLatitude, destinationLongitude);
+    //The Latitude and Longitudes of Origin Location
+    try{
+        const originGeoData = await getFinalLatLon(originLocation);
+        const originLongitude = originGeoData.lonData;
+        const originLatitude = originGeoData.latData;
 
-    const getAllFlightData = async () => {
+        try{
+            //Getting the IATA code for origin
+            const nearestOriginAirport = await getNearestAirportIATA(originLatitude, originLongitude);
+            originIATA = await nearestOriginAirport.data[0].iataCode;
+        } catch(err){
+            console.log(`Error in getting the origin IATA code: ${err}`)
+        }
+        
+
+    } catch(err){
+        console.log(`Error in getting the origin location coordinates: ${err}`)
+    }
+    
+
+    //The Latitude and Longitudes of Destination Location
+    try{
+        const destinationGeoData = await getFinalLatLon(destinationLocation);
+        const destinationLongitude = destinationGeoData.lonData;
+        const destinationLatitude = destinationGeoData.latData;
+        
+        try{
+            //Getting the IATA code for destination
+            const nearestDestinationAirport = await getNearestAirportIATA(destinationLatitude, destinationLongitude);
+            destinationIATA = await nearestDestinationAirport.data[0].iataCode;
+        } catch(err){
+            console.log(`Error in getting the destination IATA code: ${err}`)
+        }
+
+    } catch(err){
+        console.log(`Error in getting the destination location coordinates: ${err}`)
+    }
+    
+
+    const getFlightData = async () => {
 
         try {
-            const response = amadeusObj.shopping.flightOffersSearch.get({
-                originLocationCode:`${originIATA}`,
-                destinationLocationCode:`${destinationIATA}`,
-                departureDate:`${departingDate}`,
-                returnDate:`${returningDate}`,
-                adults:`${noOfAdults}`,
-                children:`${noOfChildren}`,
-                infants:`${noOfInfants}`,
-                travelClass:`${classOfTravel}`,
-                currencyCode:`${purchaseCurrency}`,
-                max:maxResponses
-            })
-            return response;
+            const response = await amadeusObj.shopping.flightOffersSearch.get({
+                "originLocationCode":originIATA,
+                "destinationLocationCode":destinationIATA,
+                "departureDate":departingDate,
+                "returnDate":returningDate,
+                "adults":noOfAdults,
+                "children":noOfChildren,
+                "infants":noOfInfants,
+                "travelClass":classOfTravel,
+                "currencyCode":purchaseCurrency,
+                "max":maxResponses
+            });
+            return response;   
         } catch(err) {
             console.log(`Error in retreiving the flight prices data: ${err}`);
+
         }
 
     }
 
-    return getAllFlightData();
+    // let allFlightData = {};
+
+    // try{
+    //     allFlightData = await getFlightData();
+    // } catch(err){
+    //     console.log(`Error in getting the flight data from amadeus API: ${err}`);
+    // }
+
+    // return allFlightData;
+    const allFlightData =  getFlightData();
+
+    return allFlightData;
 
 }
 

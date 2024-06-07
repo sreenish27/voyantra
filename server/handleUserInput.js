@@ -1,7 +1,5 @@
-import { globaluserinput } from './server.js';
 import {parse, format} from 'date-fns';
-import { getRawUserInput } from './userInputStore.js';
-import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
+
 
 const processUserInput = (inputFromUser) => {
 
@@ -16,11 +14,11 @@ const processUserInput = (inputFromUser) => {
         //Departing date
         const userDepartDate = parsedUserInput.Depart;
         const parsedDepartDate = parse(userDepartDate, 'MMMM dd', new Date());
-        const formattedDepartDate = format(parsedDepartDate, 'MM dd YYYY');
+        const formattedDepartDate = format(parsedDepartDate, 'yyyy-MM-dd');
 
         const userReturnDate = parsedUserInput.Return;
         const parsedReturnDate = parse(userReturnDate, 'MMMM dd', new Date());
-        const formattedReturnDate = format(parsedReturnDate, 'MM dd YYYY');
+        const formattedReturnDate = format(parsedReturnDate, 'yyyy-MM-dd');
 
         const userFromLocation = parsedUserInput.From;
 
@@ -30,9 +28,9 @@ const processUserInput = (inputFromUser) => {
         let userWhoGuestsAdultandChildren = 0;
         let userWhoGuestsInfants = 0;
 
-        if(length(userWhoGuests) > 10){
-            userWhoGuestsAdultandChildren = number(userWhoGuests[0]);
-            userWhoGuestsInfants = number(userWhoGuests[10]);
+        if(userWhoGuests.length > 10){
+            userWhoGuestsAdultandChildren = Number(userWhoGuests[0]);
+            userWhoGuestsInfants = Number(userWhoGuests[10]);
         }
         else{
             userWhoGuestsAdultandChildren = number(userWhoGuests[0]);
@@ -40,33 +38,20 @@ const processUserInput = (inputFromUser) => {
 
         //putting all the processed input data into an object and exporting it so that it is easier to handle elsewhere in the server-side code for further processessing
         const apiReadyUserInput = {
-            budget:userBudget,
-            departDate:formattedDepartDate,
-            returnDate:formattedReturnDate,
-            fromLocation:userFromLocation,
-            toLocation:userToLocation,
-            noOfAdultsandChildren:userWhoGuestsAdultandChildren,
-            noOfInfants:userWhoGuestsInfants
+            "budget":userBudget,
+            "departDate":formattedDepartDate,
+            "returnDate":formattedReturnDate,
+            "fromLocation":userFromLocation,
+            "toLocation":userToLocation,
+            "noOfAdultsandChildren":userWhoGuestsAdultandChildren,
+            "noOfInfants":userWhoGuestsInfants
         };
 
         return apiReadyUserInput;
 
 }
 
-const rawuserinput = getRawUserInput();
-
-//actually running the function:
-if (rawuserinput && typeof rawuserinput === Object && Object.keys(rawuserinput).length !== 0){
-   try{
-   setApiReadyInput(processUserInput(globaluserinput));
-   } catch (err){
-    console.log(`Error in processing the input: ${err}`);
-   }
-    
-}
-else{
-    console.log("No input entered");
-}
+export default processUserInput;
 
 
 
