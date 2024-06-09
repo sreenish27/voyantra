@@ -28,7 +28,7 @@ const PlanCards = () => {
             </button>
 
             <button className="relative top-[270px] right-[-320px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Plan Card 6
+                Build your own Plan
             </button>
         </div>
 

@@ -6,6 +6,7 @@ import FlightDataController from './controller/flightDataController.js';
 import { setRawUserInput, getRawUserInput } from './userInputStore.js';
 import processUserInput from './handleUserInput.js';
 import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
+import StayDataController from './controller/stayDataController.js';
 
 export const app = express();
 
@@ -60,12 +61,21 @@ app.post('/api/userInput', (req, res) => {
 app.get('/dashboard', (req, res) => {
     res.send(`A clear view all your past, present and future trips including spending, places, etc in one place!`);
 });
+//calling the processed input here so that it can be used for all 3 controllers - flight, stay and rental car
 
-app.get('/api/testing', async (req, res) => {
+//Get the flight data to process further to put into MongoDB and process it
+app.get('/api/testing/flight', async (req, res) => {
     const processedInput = getApiReadyUserInput();
     const output = await FlightDataController(processedInput);
     res.send(output);
 });
+
+//Get the Stay data to process further to put into MongoDB and process it
+app.get('/api/testing/stay', async(req, res) => {
+    const processedInput = getApiReadyUserInput();
+    const output = await StayDataController(processedInput);
+    res.send(output);
+})
 
 
 

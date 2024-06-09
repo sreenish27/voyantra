@@ -23,7 +23,8 @@ const FlightDataController = async (apireadyuserinput) => {
     const getLatLon = async (x) => {
 
         //we will process the from and to locations to get the IATA code to be passed to our API calls
-        const locationData = `https://geocode.maps.co/search?q=${x}&api_key=664e9777ab2b4679205092qzedd4b91`;
+        // const locationData = `https://geocode.maps.co/search?q=${x}&api_key=664e9777ab2b4679205092qzedd4b91`;
+        const locationData = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${x}&format=json`;
 
         try{
             const response = await fetch(locationData);
@@ -38,12 +39,6 @@ const FlightDataController = async (apireadyuserinput) => {
         }
         
     }
-
-    // //a function to store the location data and then access it from here so that I can avoid any issues with the async await structure of data retreival from API calls
-    // const setLocationData = (location) => {
-    //     const finalLocationData = location;
-    //     return finalLocationData;
-    // }
 
     const getFinalLatLon = async (placeData) => {
         const finalLocationData = await getLatLon(placeData);
@@ -63,14 +58,7 @@ const FlightDataController = async (apireadyuserinput) => {
                 latitude:latitudeData,
                 longitude:longitudeData
             });
-            // if(response && response.data && response.data.length > 0){
-            //     const nearestAirport = response.data[0];
-            //     const iatacode = nearestAirport.iataCode;
-            //     return iatacode;
-            // }
-            // else{
-            //     console.log(`No lat, lon data to return the IATA code`)
-            // }
+
             return response;
             
         } catch (err) {
@@ -140,15 +128,6 @@ const FlightDataController = async (apireadyuserinput) => {
 
     }
 
-    // let allFlightData = {};
-
-    // try{
-    //     allFlightData = await getFlightData();
-    // } catch(err){
-    //     console.log(`Error in getting the flight data from amadeus API: ${err}`);
-    // }
-
-    // return allFlightData;
     const allFlightData =  getFlightData();
 
     return allFlightData;
