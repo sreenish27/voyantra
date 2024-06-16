@@ -116,7 +116,7 @@ const FlightDataController = async (apireadyuserinput) => {
                 "adults":noOfAdults,
                 "children":noOfChildren,
                 "infants":noOfInfants,
-                "travelClass":classOfTravel,
+                // "travelClass":classOfTravel,
                 "currencyCode":purchaseCurrency,
                 "max":maxResponses
             });

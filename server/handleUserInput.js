@@ -10,7 +10,6 @@ const processUserInput = (inputFromUser) => {
 
         //extracting, processing the user input in the format I want and storing it in variables
         const userBudget = Number(parsedUserInput.BudgetInput);
-
         //Departing date
         const userDepartDate = parsedUserInput.Depart;
         const parsedDepartDate = parse(userDepartDate, 'MMMM dd', new Date());

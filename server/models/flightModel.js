@@ -24,7 +24,6 @@ const flightSchema = new mongoose.Schema(
             duration3: String,
             arrivalTime3: Date,
             destinationAirport: String,
-            fullPrice: Number,
           },
           returningFlights: {
             flightNumber1: String,
@@ -48,10 +47,8 @@ const flightSchema = new mongoose.Schema(
             duration3: String,
             arrivalTime3: Date,
             originAirport: String,
-            fullPrice: Number,
           },
           totalPrice: Number,
-          seatClass: String,
     }
     );
 

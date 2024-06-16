@@ -3,10 +3,13 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import {DB_CONNECTION, PORT} from './config.js';
 import FlightDataController from './controller/flightDataController.js';
+import storeAllTierFlightData from './modelControllerInteraction/flightDataCreation.js';
+import storeAllTierStaytData from './modelControllerInteraction/stayDataCreation.js';
 import { setRawUserInput, getRawUserInput } from './userInputStore.js';
 import processUserInput from './handleUserInput.js';
 import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
 import StayDataController from './controller/stayDataController.js';
+import allTripCards from './modelControllerInteraction/tripCardCreation.js';
 
 export const app = express();
 
@@ -19,7 +22,9 @@ app.use(express.json());
 
 
 try {
-    mongoose.connect(DB_CONNECTION).then(() => {
+    mongoose.connect(DB_CONNECTION, {
+        socketTimeoutMS: 30000
+    }).then(() => {
         console.log("Connected to MongoDB!");
         app.listen(PORT, () => {
             console.log(`Server is running on port:${PORT}`);
@@ -66,8 +71,9 @@ app.get('/dashboard', (req, res) => {
 //Get the flight data to process further to put into MongoDB and process it
 app.get('/api/testing/flight', async (req, res) => {
     const processedInput = getApiReadyUserInput();
-    const output = await FlightDataController(processedInput);
+    const output = await FlightDataController(processedInput)
     res.send(output);
+    storeAllTierFlightData(output);
 });
 
 //Get the Stay data to process further to put into MongoDB and process it
@@ -75,8 +81,9 @@ app.get('/api/testing/stay', async(req, res) => {
     const processedInput = getApiReadyUserInput();
     const output = await StayDataController(processedInput);
     res.send(output);
+    storeAllTierStaytData(output);
+    allTripCards();
 })
-
 
 
 

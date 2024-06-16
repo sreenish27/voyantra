@@ -1,20 +1,18 @@
 import mongoose from 'mongoose';
 
 const staySchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    location: { type: String, required: true },
-    checkInTime: { type: Date, required: true },
-    checkOutTime: { type: Date, required: true },
+    name: { type: String},
+    checkInTime: { type: Date},
+    checkOutTime: { type: Date},
     amenities: [String],
-    numberOfBeds: { type: Number, required: true },
-    numberOfBaths: { type: Number, required: true },
-    numberOfGuests: { type: Number, required: true },
-    numberOfInfants: { type: Number, required: true },
-    totalPrice: { type: Number, required: true },
-    averageRatings: { type: Number, required: true },
+    numberOfBeds: { type: Number },
+    bedType: {type:String},
+    numberOfGuests: { type: Number},
+    totalPrice: { type: Number},
+    averageRatings: { type: Number},
     reviews: [String],
     images: [String],
-    cancellationPolicy: { type: String, required: true },
+    cancellationPolicy: { type: String},
   });
 
 export const Stay = mongoose.model('stay', staySchema);
