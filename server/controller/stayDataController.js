@@ -15,17 +15,14 @@ const StayDataController = async (apireadyuserinput) => {
     const getLatLon = async (x) => {
 
         //we will process the from and to locations to get the IATA code to be passed to our API calls
-        // const locationData = `https://geocode.maps.co/search?q=${x}&api_key=664e9777ab2b4679205092qzedd4b91`;
         const locationData = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${x}&format=json`;
 
         try{
             const response = await fetch(locationData);
             const fullData = await response.json()
-            // const latData = Number(fullData.lat);
-            // const lonData = Number(fullData.lon);
+
             return fullData;
 
-            // return {lonData, latData};
         } catch(err) {
             console.log(`Error in getting the latitude and longitude ${err}`);
         }
@@ -81,7 +78,36 @@ const StayDataController = async (apireadyuserinput) => {
     for(let i=0; i<destinationStayCodes.data.length; i++ ) {
         const hotelIdKey = destinationStayCodes.data[i].hotelId; 
         hotelIdArray.push(hotelIdKey);
-    } 
+    }
+    
+    //this line of code is because there is a limitation to the number of hotelIds the below API can take while searching, 42 is a number that seems to work so kept it like that for now
+    const hotelIdSearchLimiter = 42;
+    const hotelIdArrayLimited = hotelIdArray.slice(0, hotelIdSearchLimiter);
+
+    //code to set the number of rooms needed based on the number of guests, going with a 3:1 ratio to keep it simple for now
+    let rooms;
+    if(noOfGuests < 4){
+        rooms = 1;
+    }
+    else{
+        const multiplier = Math.floor(noOfGuests / 3);
+        const remainder = noOfGuests % 3;
+        if(remainder === 0){
+            rooms = multiplier;
+        }
+        else{
+            if(remainder === 1){
+                rooms = multiplier;
+            }
+            else{
+                rooms = multiplier + 1;
+            }
+        }
+    }
+
+    const room = Math.floor(rooms);
+
+    console.log(room);
 
     //function to get the prices data
     const getStayFullData = async (hotelid) => {
@@ -89,7 +115,8 @@ const StayDataController = async (apireadyuserinput) => {
 
             const response = await amadeusObj.shopping.hotelOffersSearch.get({
                 "hotelIds":hotelid.join(','),
-                "adults":noOfGuests
+                "adults":noOfGuests,
+                "roomQuantity":room,
             })
 
             return response;
@@ -98,9 +125,7 @@ const StayDataController = async (apireadyuserinput) => {
         }
     }
     //get just the hotelIds
-    // const stayIdKeys = Object.keys(tenStayIdDict);
-    
-    const stayAllData = await getStayFullData(hotelIdArray);
+    const stayAllData = await getStayFullData(hotelIdArrayLimited);
 
 
     return stayAllData; 

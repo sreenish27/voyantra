@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const flightSchema = new mongoose.Schema(
     {
+        totalFlightPrice:String,
         departingFlights: {
             flightNumber1: String,
             airline1: String,
@@ -48,7 +49,6 @@ const flightSchema = new mongoose.Schema(
             arrivalTime3: Date,
             originAirport: String,
           },
-          totalPrice: Number,
     }
     );
 

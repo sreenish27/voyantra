@@ -1,4 +1,5 @@
 import { Flight } from "../models/flightModel.js";
+import moment from "moment";
 // import FlightDataController from "../controller/flightDataController.js";
 
 const FlightDataCreation = async (flightControllerData, k) => {
@@ -18,8 +19,22 @@ const FlightDataCreation = async (flightControllerData, k) => {
     const departureSegmentData = flightItinerariesData[0].segments;
     const returnSegmentData = flightItinerariesData[1].segments;
 
+    //function to calculate the layover time
+    const layoverCalc = (iternaryData, i) => {
+        const startTime = moment(iternaryData[i].departure.at);
+        const endTime = moment(iternaryData[i-1].arrival.at);
+
+        const layover = moment.duration(endTime.diff(startTime));
+
+        const layoverDuration = `${(-1)*layover.hours()} hours ${(-1)*layover.minutes()} minutes`;
+
+        return layoverDuration;
+    }
+
 
     const newFlightData = new Flight({
+
+        totalFlightPrice: flightsDataObject[chosenFlightDataObject].price.grandTotal,
         departingFlights: {
             flightNumber1: departureSegmentData[0].carrierCode + departureSegmentData[0].number,
             airline1: departureSegmentData[0].carrierCode,
@@ -27,21 +42,21 @@ const FlightDataCreation = async (flightControllerData, k) => {
             departureTime1: departureSegmentData[0].departure.at,
             duration1: departureSegmentData[0].duration,
             arrivalTime1: departureSegmentData[0].arrival.at,
-            layoverTime1: new Date(departureSegmentData[1].departure.at) - new Date(departureSegmentData[0].arrival.at),
-            flightNumber2: departureSegmentData[1].carrierCode + departureSegmentData[1].number,
-            airline2: departureSegmentData[1].carrierCode,
-            airport2: departureSegmentData[1].departure.iataCode,
-            departureTime2: departureSegmentData[1].departure.at,
-            duration2: departureSegmentData[1].duration,
-            arrivalTime2: departureSegmentData[1].arrival.at,
-            layoverTime2: new Date(departureSegmentData[2].departure.at) - new Date(departureSegmentData[1].arrival.at),
-            flightNumber3: departureSegmentData[2].carrierCode + departureSegmentData[2].number,
-            airline3: departureSegmentData[2].carrierCode,
-            airport3: departureSegmentData[2].departure.iataCode,
-            departureTime3: departureSegmentData[2].departure.at,
-            duration3: departureSegmentData[2].duration,
-            arrivalTime3: departureSegmentData[2].arrival.at,
-            destinationAirport: departureSegmentData[2].arrival.iataCode,
+            layoverTime1: departureSegmentData[1] ? layoverCalc(departureSegmentData, 1) : null,
+            flightNumber2: departureSegmentData[1] ? departureSegmentData[1].carrierCode + departureSegmentData[1].number : null,
+            airline2: departureSegmentData[1] ? departureSegmentData[1].carrierCode : null,
+            airport2: departureSegmentData[1] ? departureSegmentData[1].departure.iataCode : null,
+            departureTime2: departureSegmentData[1] ? departureSegmentData[1].departure.at : null,
+            duration2: departureSegmentData[1] ? departureSegmentData[1].duration : null,
+            arrivalTime2: departureSegmentData[1] ? departureSegmentData[1].arrival.at : null,
+            layoverTime2: departureSegmentData[2] ? layoverCalc(departureSegmentData, 2) : null,
+            flightNumber3:departureSegmentData[2] ? departureSegmentData[2].carrierCode + departureSegmentData[2].number : null,
+            airline3: departureSegmentData[2] ? departureSegmentData[2].carrierCode : null,
+            airport3: departureSegmentData[2] ? departureSegmentData[2].departure.iataCode : null,
+            departureTime3: departureSegmentData[2] ? departureSegmentData[2].departure.at : null,
+            duration3: departureSegmentData[2] ? departureSegmentData[2].duration : null,
+            arrivalTime3: departureSegmentData[2] ? departureSegmentData[2].arrival.at : null,
+            destinationAirport: departureSegmentData[2] ? departureSegmentData[2].arrival.iataCode : departureSegmentData[1] ? departureSegmentData[1].arrival.iataCode : departureSegmentData[0].arrival.iataCode,
         },
         returningFlights: {
             flightNumber1: returnSegmentData[0].carrierCode + returnSegmentData[0].number,
@@ -50,23 +65,23 @@ const FlightDataCreation = async (flightControllerData, k) => {
             departureTime1: returnSegmentData[0].departure.at,
             duration1: returnSegmentData[0].duration,
             arrivalTime1: returnSegmentData[0].arrival.at,
-            layoverTime1: new Date(returnSegmentData[1].departure.at) - new Date(returnSegmentData[1].arrival.at),
-            flightNumber2: returnSegmentData[1].carrierCode + returnSegmentData[1].number,
-            airline2: returnSegmentData[1].carrierCode,
-            airport2: returnSegmentData[1].departure.iataCode,
-            departureTime2: returnSegmentData[1].departure.at,
-            duration2: returnSegmentData[1].duration,
-            arrivalTime2: returnSegmentData[1].arrival.at,
-            layoverTime2: new Date(returnSegmentData[2].departure.at) - new Date(returnSegmentData[1].arrival.at),
-            flightNumber3: returnSegmentData[2].carrierCode + returnSegmentData[2].number,
-            airline3: returnSegmentData[2].carrierCode,
-            airport3: returnSegmentData[2].departure.iataCode,
-            departureTime3: returnSegmentData[2].departure.at,
-            duration3: returnSegmentData[2].duration,
-            arrivalTime3: returnSegmentData[2].arrival.at,
-            originAirport: returnSegmentData[2].arrival.iataCode,
+            layoverTime1: returnSegmentData[1] ? layoverCalc(returnSegmentData, 1) : null,
+            flightNumber2: returnSegmentData[1] ? returnSegmentData[1].carrierCode + returnSegmentData[1].number : null,
+            airline2: returnSegmentData[1] ? returnSegmentData[1].carrierCode : null,
+            airport2: returnSegmentData[1] ? returnSegmentData[1].departure.iataCode : null,
+            departureTime2: returnSegmentData[1] ? returnSegmentData[1].departure.at : null,
+            duration2: returnSegmentData[1] ? returnSegmentData[1].duration : null,
+            arrivalTime2: returnSegmentData[1] ? returnSegmentData[1].arrival.at : null,
+            layoverTime2: returnSegmentData[2] ? layoverCalc(returnSegmentData, 2) : null,
+            flightNumber3: returnSegmentData[2] ? returnSegmentData[2].carrierCode + returnSegmentData[2].number : null,
+            airline3: returnSegmentData[2] ? returnSegmentData[2].carrierCode : null,
+            airport3: returnSegmentData[2] ? returnSegmentData[2].departure.iataCode : null,
+            departureTime3: returnSegmentData[2] ? returnSegmentData[2].departure.at : null,
+            duration3: returnSegmentData[2] ? returnSegmentData[2].duration : null,
+            arrivalTime3: returnSegmentData[2] ? returnSegmentData[2].arrival.at : null,
+            originAirport: returnSegmentData[2] ? returnSegmentData[2].arrival.iataCode : returnSegmentData[1] ? returnSegmentData[1].arrival.iataCode : returnSegmentData[0].arrival.iataCode,
         },
-        totalPrice: flightsDataObject[0].price.fees.grandTotal,
+        
     })
 
     //save the data in MongoDB

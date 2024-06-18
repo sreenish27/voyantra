@@ -28,7 +28,7 @@ const StayDataCreation = async (stayControllerData, k) => {
         try{
             newStayData.save();
         } catch(err){
-            console.log(`Error in trying to save the new flight data: ${err}`);
+            console.log(`Error in trying to save the new stay data: ${err}`);
         }  
 
 }        

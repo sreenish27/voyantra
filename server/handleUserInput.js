@@ -32,7 +32,7 @@ const processUserInput = (inputFromUser) => {
             userWhoGuestsInfants = Number(userWhoGuests[10]);
         }
         else{
-            userWhoGuestsAdultandChildren = number(userWhoGuests[0]);
+            userWhoGuestsAdultandChildren = Number(userWhoGuests[0]);
         }
 
         //putting all the processed input data into an object and exporting it so that it is easier to handle elsewhere in the server-side code for further processessing
