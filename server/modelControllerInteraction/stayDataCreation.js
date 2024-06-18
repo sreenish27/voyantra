@@ -17,7 +17,7 @@ const StayDataCreation = async (stayControllerData, k) => {
             checkInTime: stayDataOther.checkInDate,
             checkOutTime: stayDataOther.checkOutDate,
             amenities: stayDataOther.room.description.text,
-            numberOfBeds: stayDataOther.room.typeEstimated.beds,
+            numberOfBeds:stayDataOther.room.typeEstimated.beds ?? 1,
             bedType: stayDataOther.room.typeEstimated.bedType,
             numberOfGuests: stayDataOther.guests.adults,
             totalPrice: stayDataOther.price.total,

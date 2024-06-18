@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import {DB_CONNECTION, PORT} from './config.js';
+// import { flight_DB_CONNECTION } from './config.js';
 import FlightDataController from './controller/flightDataController.js';
 import storeAllTierFlightData from './modelControllerInteraction/flightDataCreation.js';
 import storeAllTierStaytData from './modelControllerInteraction/stayDataCreation.js';
@@ -20,7 +21,7 @@ app.use(cors({
 
 app.use(express.json());
 
-
+//establishing a connection to mongoDB
 try {
     mongoose.connect(DB_CONNECTION, {
         socketTimeoutMS: 30000
@@ -34,6 +35,9 @@ try {
 } catch(error) {
     console.error("Failed to connect to MongoDB", error);
 };
+
+// //creating a connection to the airline airport databse to access the collections in turn their objects
+// export const flight_db = mongoose.createConnection(flight_DB_CONNECTION);
 
 app.get('/', (req, res) => {
     res.send(`Welcome to Voyantra!`);

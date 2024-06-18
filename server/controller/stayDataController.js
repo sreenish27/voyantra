@@ -107,8 +107,6 @@ const StayDataController = async (apireadyuserinput) => {
 
     const room = Math.floor(rooms);
 
-    console.log(room);
-
     //function to get the prices data
     const getStayFullData = async (hotelid) => {
         try{

@@ -17,11 +17,12 @@ const App = () => {
         <SearchBar/>
       </div>
       <div>
-        <PlanCards/>
-      </div>
-      <div>
         <DatePickerToggle/>
       </div>
+      <div>
+        <PlanCards/>
+      </div>
+      
     </div>
   );
 };
