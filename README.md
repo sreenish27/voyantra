@@ -14,6 +14,7 @@ Voyantra is an innovative trip planning platform designed to simplify the proces
 - **Express.js**: Backend framework to handle server-side operations.
 - **React**: Frontend library for building the user interface.
 - **Node.js**: Server environment for running the backend.
+- **Talwind CSS**:Frontend design asthetics.
 
 ## Project Status
 
