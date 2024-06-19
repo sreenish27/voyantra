@@ -1,5 +1,4 @@
 import { flight_db } from "./airlineApi.js";
-import mongoose from "mongoose";
 
 //get the airline name from it's IATA code
 const fetchAirportData = async (iataCode) => {
@@ -22,9 +21,5 @@ const fetchAirportData = async (iataCode) => {
     }
 
 }
-
-const testdata = await fetchAirportData('AMS');
-
-console.log(testdata);
 
 export default fetchAirportData;

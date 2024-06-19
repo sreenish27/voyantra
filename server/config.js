@@ -4,7 +4,7 @@ import amadeus from 'amadeus';
 dotenv.config();
 
 export const DB_CONNECTION = process.env.DB_URI;
-// export const flight_DB_CONNECTION = `${process.env.flight_DB_URI}`;
+export const flight_DB_CONNECTION = process.env.flight_DB_URI;
 export const PORT = process.env.PORT;
 
 //Amadeus details

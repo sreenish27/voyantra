@@ -2,7 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import {DB_CONNECTION, PORT} from './config.js';
-// import { flight_DB_CONNECTION } from './config.js';
 import FlightDataController from './controller/flightDataController.js';
 import storeAllTierFlightData from './modelControllerInteraction/flightDataCreation.js';
 import storeAllTierStaytData from './modelControllerInteraction/stayDataCreation.js';
@@ -11,6 +10,9 @@ import processUserInput from './handleUserInput.js';
 import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
 import StayDataController from './controller/stayDataController.js';
 import allTripCards from './modelControllerInteraction/tripCardCreation.js';
+import fetchAirlineData from './createdApis/airlineApi.js';
+import fetchAirportData from './createdApis/airportApi.js';
+
 
 export const app = express();
 
@@ -87,6 +89,31 @@ app.get('/api/testing/stay', async(req, res) => {
     res.send(output);
     storeAllTierStaytData(output);
     allTripCards();
+})
+
+//creating endpoints for the AirportAirline database
+
+//airline endpoint
+app.get(`/api/testing/airline/:iataCode`, async(req, res) => {
+    try{
+        const iataCode = req.params.iataCode;
+        const response = await fetchAirlineData(iataCode);
+        res.send(response);
+    } catch(err){
+        res.response(500).send({err: err.message});
+    }
+    
+})
+//airport endpoint
+app.get(`/api/testing/airport/:iataCode`, async(req, res) => {
+    try{
+        const iataCode = req.params.iataCode;
+        const response = await fetchAirportData(iataCode);
+        res.send(response);
+    } catch(err){
+        res.response(500).send({err:err.message});
+    }
+    
 })
 
 
