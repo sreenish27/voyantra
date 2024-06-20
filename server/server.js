@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 });
 
 //recieve all user input from client side
-app.post('/api/userInput', (req, res) => {
+app.post('/api/userInput', async (req, res) => {
 
     const userinput = req.body;
     try{
@@ -63,6 +63,17 @@ app.post('/api/userInput', (req, res) => {
         console.log(`Error in processing user input: ${err}`);
         throw err;
     }
+    //this is the part where the flight data gets stored
+    const processedInput = getApiReadyUserInput();
+    const flight_output = await FlightDataController(processedInput)
+    storeAllTierFlightData(flight_output);
+
+    //the part where stay data gets stored
+    const stay_output = await StayDataController(processedInput);
+    storeAllTierStaytData(stay_output);
+
+    //the part where trip cards are created
+    allTripCards();
 });
 
 
@@ -70,25 +81,6 @@ app.post('/api/userInput', (req, res) => {
 app.get('/dashboard', (req, res) => {
     res.send(`A clear view all your past, present and future trips including spending, places, etc in one place!`);
 });
-//calling the processed input here so that it can be used for all 3 controllers - flight, stay and rental car
-
-//Get the flight data to process further to put into MongoDB and process it
-app.get('/api/testing/flight', async (req, res) => {
-    const processedInput = getApiReadyUserInput();
-    const output = await FlightDataController(processedInput)
-    res.send(output);
-    storeAllTierFlightData(output);
-});
-
-//Get the Stay data to process further to put into MongoDB and process it
-app.get('/api/testing/stay', async(req, res) => {
-    const processedInput = getApiReadyUserInput();
-    const output = await StayDataController(processedInput);
-    res.send(output);
-    storeAllTierStaytData(output);
-    allTripCards();
-})
-
 //creating endpoints for the AirportAirline database
 
 //airline endpoint

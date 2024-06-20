@@ -36,6 +36,22 @@ const PlanCards = () => {
         }
     },[isTripCardExpanded]);
 
+    //getting the tripcards data from server side
+
+    const fetchtripCardData = async () => {
+        const tripcardsdata_url = 'http://localhost:4000/api/testing/tripcards';
+
+        try{
+            const response = await fetch(tripcardsdata_url);
+            const tripcardsdata = await response.json();
+        } catch(err){
+            console.log(`Error in getting the tripcards data from server: ${err}`);
+        }
+    }
+    
+
+
+
 
     return(
         <>
@@ -73,6 +89,7 @@ const PlanCards = () => {
             <div id="expanded-tripCard" className="fixed top-[50px] left-[250px] bg-white ring-1 ring-black ring-opacity-5 w-[900px] h-[730px] text-gray-700 font-normal rounded-lg shadow-md z-30 overflow-auto">
             <div className = "relative top-[320px] left-[160px]">
                 Expanded Trip Card, will fill up with all the details of an individual trip.
+                {fetchtripCardData()};
             </div>
             </div>
         )} 
