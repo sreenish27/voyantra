@@ -12,6 +12,7 @@ import StayDataController from './controller/stayDataController.js';
 import allTripCards from './modelControllerInteraction/tripCardCreation.js';
 import fetchAirlineData from './createdApis/airlineApi.js';
 import fetchAirportData from './createdApis/airportApi.js';
+import fetchTripCardData from './createdApis/tripCardClientSideapi.js';
 
 
 export const app = express();
@@ -37,9 +38,6 @@ try {
 } catch(error) {
     console.error("Failed to connect to MongoDB", error);
 };
-
-// //creating a connection to the airline airport databse to access the collections in turn their objects
-// export const flight_db = mongoose.createConnection(flight_DB_CONNECTION);
 
 app.get('/', (req, res) => {
     res.send(`Welcome to Voyantra!`);
@@ -114,6 +112,17 @@ app.get(`/api/testing/airport/:iataCode`, async(req, res) => {
         res.response(500).send({err:err.message});
     }
     
+})
+
+//checking if I am getting the trip card data and also setting up the endpoint simultaneously
+app.get('/api/testing/tripcards', async(req, res) => {
+    try{
+        const response = await fetchTripCardData();
+        res.send(response);
+    } catch(err){
+        console.log(`Error in getting the trip cards: ${err}`);
+    }
+   
 })
 
 
