@@ -1,6 +1,6 @@
 # Voyantra
 
-Voyantra is an innovative trip planning platform designed to simplify the process of creating and booking customized travel itineraries. Built using the MERN stack (MongoDB, Express.js, React, Node.js), Voyantra offers users a seamless and collaborative trip planning experience.
+Voyantra is a trip planning platform designed to simplify the process of creating and booking customized travel itineraries. Built using the MERN stack (MongoDB, Express.js, React, Node.js), Voyantra offers users a seamless and collaborative trip planning experience.
 
 ## Features
 
