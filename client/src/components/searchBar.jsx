@@ -89,7 +89,6 @@ const SearchBar = () => {
     //To automatically update the search results under the From search bar
     useEffect(() => {
         if(isUserSearchingLocation != ''){
-            // const api_places_url = `https://geocode.maps.co/search?q=${isUserSearchingLocation}&api_key=664e9777ab2b4679205092qzedd4b91`
             const api_places_url = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${isUserSearchingLocation}&format=json`
 
             const fetchResults = async () => {
@@ -306,8 +305,7 @@ const SearchBar = () => {
             } catch(error){
                 console.log(`Error encountered in sending user input to server: ${error}`);
             }
-        }, 100)
-            
+        }, 100)  
         
     }
     return(

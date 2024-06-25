@@ -11,7 +11,7 @@ const fetchAirportData = async (iataCode) => {
 
         const airportInfo = await airportCollection.findOne({'IATA code':iataCode});
 
-        const airport = airportInfo.airportName;
+        const airport = airportInfo.displayAirportName;
 
         return airport;
 

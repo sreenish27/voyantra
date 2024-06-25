@@ -13,6 +13,7 @@ import allTripCards from './modelControllerInteraction/tripCardCreation.js';
 import fetchAirlineData from './createdApis/airlineApi.js';
 import fetchAirportData from './createdApis/airportApi.js';
 import fetchTripCardData from './createdApis/tripCardClientSideapi.js';
+import fetchAirlineLogo from './createdApis/airlineLogosApi.js';
 
 
 export const app = express();
@@ -53,9 +54,6 @@ app.post('/api/userInput', async (req, res) => {
         console.log(`Error in the json stringify of user input: ${err}`);
     }
     
-
-    res.setHeader('Content-Type','application/json');
-    res.send(`Here is the user input:${getRawUserInput()}`);
     try{
         setApiReadyInput(processUserInput(getRawUserInput()));
         console.log(getApiReadyUserInput());
@@ -63,8 +61,10 @@ app.post('/api/userInput', async (req, res) => {
         console.log(`Error in processing user input: ${err}`);
         throw err;
     }
-    //this is the part where the flight data gets stored
+
     const processedInput = getApiReadyUserInput();
+
+    //this is the part where the flight data gets stored
     const flight_output = await FlightDataController(processedInput)
     storeAllTierFlightData(flight_output);
 
@@ -75,6 +75,15 @@ app.post('/api/userInput', async (req, res) => {
     //the part where trip cards are created
     allTripCards();
 });
+
+app.get('/api/userInput', async (req, res) => {
+    try{
+        const response = await fetchTripCardData();
+        return response;
+    } catch(err){
+        console.log(`Error in getting the tripcards from the database: ${err}`);
+    }
+})
 
 
 //Dashboard route - It must have all individual user specific useful details in it
@@ -115,6 +124,17 @@ app.get('/api/testing/tripcards', async(req, res) => {
         console.log(`Error in getting the trip cards: ${err}`);
     }
    
+})
+
+//setting up an endpoint for getting airline logos (in the form of base64 strings which will be rendered later in the client side)
+app.get(`/api/testing/airlinelogo/:iatacode`, async (req, res) => {
+    try{
+        const iataCode = req.params.iatacode;
+        const response = await fetchAirlineLogo(iataCode);
+        res.send(response);
+    }catch(err){
+        res.response(500).send({err: err.message});
+    }
 })
 
 

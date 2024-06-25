@@ -31,7 +31,8 @@ const FlightDataCreation = async (flightControllerData, k) => {
         const airlineUrl = `http://localhost:4000/api/testing/airport/${iataCode}`;
         const response = await fetch(airlineUrl);
         const airportName = response.text();
-        return airportName;
+        const airport = airportName;
+        return airport;
     }
 
     //function to calculate the layover time
@@ -63,12 +64,22 @@ const FlightDataCreation = async (flightControllerData, k) => {
         return formattedTime;
     }
 
+    //function to get the base64 string which will be converted to image of airline logo, based on IATA code
+    const getAirlineLogo = async (iataCode) => {
+
+        const airlineLogoUrl = `http://localhost:4000/api/testing/airlinelogo/${iataCode}`;
+        const response = await fetch(airlineLogoUrl);
+        const airlineLogoString = response.text();
+        return airlineLogoString;
+    }
+
     const newFlightData = new Flight({
 
         totalFlightPrice: flightsDataObject[chosenFlightDataObject].price.grandTotal,
         departingFlights: {
             flightNumber1: departureSegmentData[0].carrierCode + departureSegmentData[0].number,
             airline1: await getAirlineData(departureSegmentData[0].carrierCode),
+            airline1Logo: await getAirlineLogo(departureSegmentData[0].carrierCode),
             airport1: await getAirportData(departureSegmentData[0].departure.iataCode),
             departureTime1: exactTimeFromUTC(departureSegmentData[0].departure.at),
             duration1: flightTime(departureSegmentData[0].duration),
@@ -76,6 +87,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
             layoverTime1: departureSegmentData[1] ? layoverCalc(departureSegmentData, 1) : null,
             flightNumber2: departureSegmentData[1] ? departureSegmentData[1].carrierCode + departureSegmentData[1].number : null,
             airline2: departureSegmentData[1] ? await getAirlineData(departureSegmentData[1].carrierCode) : null,
+            airline2Logo: departureSegmentData[1] ? await getAirlineLogo(departureSegmentData[1].carrierCode) : null,
             airport2: departureSegmentData[1] ? await getAirportData(departureSegmentData[1].departure.iataCode) : null,
             departureTime2: departureSegmentData[1] ? exactTimeFromUTC(departureSegmentData[1].departure.at) : null,
             duration2: departureSegmentData[1] ? flightTime(departureSegmentData[1].duration) : null,
@@ -83,15 +95,20 @@ const FlightDataCreation = async (flightControllerData, k) => {
             layoverTime2: departureSegmentData[2] ? layoverCalc(departureSegmentData, 2) : null,
             flightNumber3:departureSegmentData[2] ? departureSegmentData[2].carrierCode + departureSegmentData[2].number : null,
             airline3: departureSegmentData[2] ? await getAirlineData(departureSegmentData[2].carrierCode) : null,
+            airline3Logo: departureSegmentData[2] ? await getAirlineLogo(departureSegmentData[2].carrierCode) : null,
             airport3: departureSegmentData[2] ? await getAirportData(departureSegmentData[2].departure.iataCode) : null,
             departureTime3: departureSegmentData[2] ? exactTimeFromUTC(departureSegmentData[2].departure.at) : null,
             duration3: departureSegmentData[2] ? flightTime(departureSegmentData[2].duration) : null,
             arrivalTime3: departureSegmentData[2] ? exactTimeFromUTC(departureSegmentData[2].arrival.at) : null,
             destinationAirport: departureSegmentData[2] ? await getAirportData(departureSegmentData[2].arrival.iataCode) : departureSegmentData[1] ? await getAirportData(departureSegmentData[1].arrival.iataCode) : await getAirportData(departureSegmentData[0].arrival.iataCode),
+            noOfStops: departureSegmentData[2] ? 2 : departureSegmentData[1] ? 1 : 0,
+            totalFlightTime: departureSegmentData[2] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration + departureSegmentData[2].duration) : departureSegmentData[1] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration) : flightTime(departureSegmentData[0].duration),
+            totalTime: departureSegmentData[2] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration + departureSegmentData[2].duration) : departureSegmentData[1] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration) : flightTime(departureSegmentData[0].duration),
         },
         returningFlights: {
             flightNumber1: returnSegmentData[0].carrierCode + returnSegmentData[0].number,
             airline1: await getAirlineData(returnSegmentData[0].carrierCode),
+            airline1Logo: await getAirlineLogo(returnSegmentData[0].carrierCode),
             airport1: await getAirportData(returnSegmentData[0].departure.iataCode),
             departureTime1: exactTimeFromUTC(returnSegmentData[0].departure.at),
             duration1: flightTime(returnSegmentData[0].duration),
@@ -99,6 +116,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
             layoverTime1: returnSegmentData[1] ? layoverCalc(returnSegmentData, 1) : null,
             flightNumber2: returnSegmentData[1] ? returnSegmentData[1].carrierCode + returnSegmentData[1].number : null,
             airline2: returnSegmentData[1] ? await getAirlineData(returnSegmentData[1].carrierCode) : null,
+            airline2Logo: returnSegmentData[1] ? await getAirlineLogo(returnSegmentData[1].carrierCode) : null,
             airport2: returnSegmentData[1] ? await getAirportData(returnSegmentData[1].departure.iataCode) : null,
             departureTime2: returnSegmentData[1] ? exactTimeFromUTC(returnSegmentData[1].departure.at) : null,
             duration2: returnSegmentData[1] ? flightTime(returnSegmentData[1].duration) : null,
@@ -106,11 +124,15 @@ const FlightDataCreation = async (flightControllerData, k) => {
             layoverTime2: returnSegmentData[2] ? layoverCalc(returnSegmentData, 2) : null,
             flightNumber3: returnSegmentData[2] ? returnSegmentData[2].carrierCode + returnSegmentData[2].number : null,
             airline3: returnSegmentData[2] ? await getAirlineData(returnSegmentData[2].carrierCode) : null,
+            airline3Logo: returnSegmentData[2] ? await getAirlineLogo(returnSegmentData[2].carrierCode) : null,
             airport3: returnSegmentData[2] ? await getAirportData(returnSegmentData[2].departure.iataCode) : null,
             departureTime3: returnSegmentData[2] ? exactTimeFromUTC(returnSegmentData[2].departure.at) : null,
             duration3: returnSegmentData[2] ? flightTime(returnSegmentData[2].duration) : null,
             arrivalTime3: returnSegmentData[2] ? exactTimeFromUTC(returnSegmentData[2].arrival.at) : null,
             originAirport: returnSegmentData[2] ? await getAirportData(returnSegmentData[2].arrival.iataCode) : returnSegmentData[1] ? await getAirportData(returnSegmentData[1].arrival.iataCode) : await getAirportData(returnSegmentData[0].arrival.iataCode),
+            noOfStops: returnSegmentData[2] ? 2 : returnSegmentData[1] ? 1 : 0,
+            totalFlightTime: returnSegmentData[2] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration + returnSegmentData[2].duration) : returnSegmentData[1] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration) : flightTime(returnSegmentData[0].duration),
+            totalTime: returnSegmentData[2] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration + returnSegmentData[2].duration) : returnSegmentData[1] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration) : flightTime(returnSegmentData[0].duration),
         },
         
     })
