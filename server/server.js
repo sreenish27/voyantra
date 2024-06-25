@@ -14,6 +14,7 @@ import fetchAirlineData from './createdApis/airlineApi.js';
 import fetchAirportData from './createdApis/airportApi.js';
 import fetchTripCardData from './createdApis/tripCardClientSideapi.js';
 import fetchAirlineLogo from './createdApis/airlineLogosApi.js';
+import fetchCityData from './createdApis/cityApi.js';
 
 
 export const app = express();
@@ -108,6 +109,18 @@ app.get(`/api/testing/airport/:iataCode`, async(req, res) => {
     try{
         const iataCode = req.params.iataCode;
         const response = await fetchAirportData(iataCode);
+        res.send(response);
+    } catch(err){
+        res.response(500).send({err:err.message});
+    }
+    
+})
+
+//city endpoint
+app.get(`/api/testing/city/:iataCode`, async(req, res) => {
+    try{
+        const iataCode = req.params.iataCode;
+        const response = await fetchCityData(iataCode);
         res.send(response);
     } catch(err){
         res.response(500).send({err:err.message});

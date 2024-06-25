@@ -70,28 +70,6 @@ const PlanCards = () => {
             <button onClick = {handleTripCardExpansion} className="relative hover:bg-gray-100 top-[160px] right-[-220px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
                 Plan Card 1
             </button>
-
-            <button className="relative hover:bg-gray-100 top-[160px] right-[-270px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Plan Card 2
-            </button>
-
-            <button className="relative hover:bg-gray-100 top-[160px] right-[-320px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Plan Card 3
-            </button>
-        </div>
-
-        <div>
-            <button className="relative hover:bg-gray-100 top-[205px] right-[-220px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Plan Card 4
-            </button>
-
-            <button className="relative hover:bg-gray-100 top-[205px] right-[-270px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Plan Card 5
-            </button>
-
-            <button className="relative hover:bg-gray-100 top-[205px] right-[-320px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                Build your own Plan
-            </button>
         </div>
         {isModalOpen && (
             <div onClick = {handleTripCardClose} className = "fixed inset-0 bg-black bg-opacity-50 z-20 overflow-hidden"></div>
@@ -101,14 +79,14 @@ const PlanCards = () => {
 
                
                 {/* top of the flight card will get rendered always*/}
-                <div className = "relative top-[30px] left-[40px] font-bold text-xl">Your Trip to San Jose</div>
+                <div className = "relative top-[30px] left-[40px] font-bold text-xl">Your Trip to {isTripFlightData[0].flight.destinationCity}</div>
                 <div className = "relative top-[80px] left-[40px] ring-1 ring-black ring-opacity-10 rounded-md w-[710px] h-[50px]">
                     <div className = "relative top-[15px] left-[14px] text-sm text-green-600">15% lower CO2e emissions than the average of all flights we offer for this route</div>
                     </div>
                 {/* below a segment starts includes all the departing flights */}
                 <div>
-                <div className = "relative top-[100px] left-[40px] font-bold">Flight to Chennai</div>
-                <div className = "relative top-[102px] left-[40px] text-[15px] text-gray-600">1 stop · 19h 20m</div>
+                <div className = "relative top-[100px] left-[40px] font-bold">Flight to {isTripFlightData[0].flight.destinationCity}</div>
+                <div className = "relative top-[102px] left-[40px] text-[15px] text-gray-600">{isTripFlightData[0].flight.departingFlights.noOfStops} stops · 19h 20m</div>
 
                 {/* below is the first flight, it includes the svgs used and the data displayed in that rectangular segment, it defines one flight which will be later used to display based on no of stops */}
                 <div>
@@ -121,13 +99,13 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Sat, Jul 20 · 9:50 PM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">BOS · Logan Airport</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Sun, Jul 21 · 2:30 PM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">IST · Istanbul Airport</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK82 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 9h 40m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.departureTime1}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.airport1}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.arrivalTime1}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.airport2}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.airline1}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.flightNumber1} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.departingFlights.duration1}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
                 <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
                     </div>
@@ -135,7 +113,7 @@ const PlanCards = () => {
 
                 {/* below is the first layover and the dotted line segment */}
                 <div className = "relative top-[-77px]">
-                <div className = "relative top-[77px] left-[130px] text-sm">Layover 5h 45m</div>
+                <div className = "relative top-[77px] left-[130px] text-sm">Layover {isTripFlightData[0].flight.departingFlights.layoverTime1}</div>
                 <div className = "relative top-[-7px] left-[48px] text-[15px] font-thin text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1" height="130" viewBox="0 0 1 100"> <path d="M0.5 0v130" stroke="black" stroke-width="1" stroke-dasharray="4 4"/> </svg>
                 </div>
@@ -155,21 +133,21 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Sun, Jul 21 · 8:15 PM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">IST · Istanbul Airport</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Mon, Jul 22 · 4:50 AM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">DEL · Delhi International Airport</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK716 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 6h 05m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.departureTime2}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.airport2}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.arrivalTime2}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.airport3}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.airline2}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.flightNumber2} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.departingFlights.duration2}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
-                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
+                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline2Logo}`} />
                     </div>
                 </div>
 
                  {/* below is the second layover and the dotted line segment */}
                  <div className = "relative top-[-287px]">
-                <div className = "relative top-[77px] left-[130px] text-sm">Layover 7h 40m</div>
+                <div className = "relative top-[77px] left-[130px] text-sm">Layover {isTripFlightData[0].flight.departingFlights.layoverTime2}</div>
                 <div className = "relative top-[-7px] left-[48px] text-[15px] font-thin text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1" height="130" viewBox="0 0 1 100"> <path d="M0.5 0v130" stroke="black" stroke-width="1" stroke-dasharray="4 4"/> </svg>
                 </div>
@@ -189,15 +167,15 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Mon, Jul 22 · 12:30 PM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">DEL · Delhi International Airport</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Mon, Jul 22 · 3:20 PM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">MAA · Chennai International Airport</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK8433 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 2h 50m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.departureTime3}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.airport3}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.arrivalTime3}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.departingFlights.destinationAirport}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.airline3}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.departingFlights.flightNumber3} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.departingFlights.duration3}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
-                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
+                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline3Logo}`} />
                     </div>
                 </div>
 
@@ -206,8 +184,8 @@ const PlanCards = () => {
 
                 {/* below a segment starts includes all the return flights */}
                 <div className = "relative top-[-520px]">
-                <div className = "relative top-[100px] left-[40px] font-bold">Flight to Boston</div>
-                <div className = "relative top-[102px] left-[40px] text-[15px] text-gray-600">2 stops · 30h 55m</div>
+                <div className = "relative top-[100px] left-[40px] font-bold">Flight to {isTripFlightData[0].flight.originCity}</div>
+                <div className = "relative top-[102px] left-[40px] text-[15px] text-gray-600">{isTripFlightData[0].flight.returningFlights.noOfStops} stops · 30h 55m</div>
 
                 {/* below is the first flight, it includes the svgs used and the data displayed in that rectangular segment, it defines one flight which will be later used to display based on no of stops */}
                 <div>
@@ -220,21 +198,21 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Sat, Jul 27 · 10:30 PM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">MAA · Chennai International Airport</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Sun, Jul 28 · 12:25 AM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">BOM · Chhatrapati Shivaji International Airport Mumbait</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK4747 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 1h 55m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.departureTime1}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.airport1}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.arrivalTime1}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.airport2}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.airline1}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.flightNumber1} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.returningFlights.duration1}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
-                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
+                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.returningFlights.airline1Logo}`} />
                     </div>
                 </div>
 
                 {/* below is the first layover and the dotted line segment */}
                 <div className = "relative top-[-77px]">
-                <div className = "relative top-[77px] left-[130px] text-sm">Layover 6h 10m</div>
+                <div className = "relative top-[77px] left-[130px] text-sm">Layover {isTripFlightData[0].flight.returningFlights.layoverTime1}</div>
                 <div className = "relative top-[-7px] left-[48px] text-[15px] font-thin text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1" height="130" viewBox="0 0 1 100"> <path d="M0.5 0v130" stroke="black" stroke-width="1" stroke-dasharray="4 4"/> </svg>
                 </div>
@@ -254,21 +232,21 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Sun, Jul 28 · 6:35 AM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">BOM · Chhatrapati Shivaji International Airport Mumbai</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Sun, Jul 28 · 10:55 AM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">IST · Istanbul Airport</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK721 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 6h 50m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.departureTime2}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.airport2}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.arrivalTime2}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.airport3}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.airline2}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.flightNumber2} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.returningFlights.duration2}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
-                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
+                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.returningFlights.airline2Logo}`} />
                     </div>
                 </div>
 
                  {/* below is the second layover and the dotted line segment */}
                  <div className = "relative top-[-287px]">
-                <div className = "relative top-[77px] left-[130px] text-sm">Layover 5h 20m</div>
+                <div className = "relative top-[77px] left-[130px] text-sm">Layover {isTripFlightData[0].flight.returningFlights.layoverTime2}</div>
                 <div className = "relative top-[-7px] left-[48px] text-[15px] font-thin text-gray-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1" height="130" viewBox="0 0 1 100"> <path d="M0.5 0v130" stroke="black" stroke-width="1" stroke-dasharray="4 4"/> </svg>
                 </div>
@@ -288,15 +266,15 @@ const PlanCards = () => {
                 <div className = "relative top-[100px] left-[40px] text-[15px] font-thin text-gray-600">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="14.000000pt" height="16.000000pt" viewBox="0 0 38.000000 40.000000" preserveAspectRatio="xMidYMid meet"> <g transform="translate(0.000000,40.000000) scale(0.100000,-0.100000)" fill="#333333" stroke="none"> <path d="M115 366 c-101 -44 -125 -178 -46 -257 65 -65 157 -65 222 0 124 124 -15 327 -176 257z m126 -31 c64 -34 87 -120 49 -182 -50 -83 -170 -83 -220 0 -68 111 55 242 171 182z"/> </g> </svg>
                 </div>
-                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">Sun, Jul 28 · 4:15 PM</div>
-                <div className = "relative top-[14px] left-[70px] text-sm font-bold">IST · Istanbul Airport</div>
-                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">Sun, Jul 28 · 7:55 PM</div>
-                <div className = "relative top-[42px] left-[70px] text-sm font-bold">BOS · Logan Airport</div> 
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Turkish Airlines</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">TK81 · Economy</div>
-                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time 10h 40m</div>
+                <div className = "relative top-[14px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.departureTime3}</div>
+                <div className = "relative top-[14px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.airport3}</div>
+                <div className = "relative top-[42px] left-[70px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.arrivalTime3}</div>
+                <div className = "relative top-[42px] left-[70px] text-sm font-bold">{isTripFlightData[0].flight.returningFlights.originAirport}</div> 
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.airline3}</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">{isTripFlightData[0].flight.returningFlights.flightNumber3} · Economy</div>
+                <div className = "relative top-[-35px] left-[570px] text-[12px] text-gray-600">Flight time {isTripFlightData[0].flight.returningFlights.duration3}</div>
                 <div className = "relative top-[-90px] left-[525px] w-[26px]">
-                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.departingFlights.airline1Logo}`} />
+                <img src={`data:image/jpeg;base64,${isTripFlightData[0].flight.returningFlights.airline3Logo}`} />
                     </div>
                 </div>
 
@@ -353,7 +331,7 @@ const PlanCards = () => {
                 {/* below is the price of the entire flight trip, not creating a pay button because I want to create a singular button for flights, stay and rental car together*/}
                 <div className = "relative top-[-1350px] left-[40px] font-bold text-xl">$2,590.57</div>
                 <div className = "relative top-[-1342px] left-[40px] text-[12px] text-gray-600">Total price for all travelers</div>
-                
+
                 </div>
 
             </div>

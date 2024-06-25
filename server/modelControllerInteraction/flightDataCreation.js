@@ -28,12 +28,21 @@ const FlightDataCreation = async (flightControllerData, k) => {
 
     const getAirportData = async (iataCode) => {
 
-        const airlineUrl = `http://localhost:4000/api/testing/airport/${iataCode}`;
-        const response = await fetch(airlineUrl);
+        const airportUrl = `http://localhost:4000/api/testing/airport/${iataCode}`;
+        const response = await fetch(airportUrl);
         const airportName = response.text();
         const airport = airportName;
         return airport;
     }
+
+    const getCityData = async (iataCode) => {
+        const cityUrl = `http://localhost:4000/api/testing/city/${iataCode}`;
+        const response = await fetch(cityUrl);
+        const cityName = response.text();
+        const city = cityName;
+        return city;
+    }
+    
 
     //function to calculate the layover time
     const layoverCalc = (iternaryData, i) => {
@@ -42,7 +51,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
 
         const layover = moment.duration(endTime.diff(startTime));
 
-        const layoverDuration = `${(-1)*layover.hours()} hours ${(-1)*layover.minutes()} minutes`;
+        const layoverDuration = `${(-1)*layover.hours()}h ${(-1)*layover.minutes()}m`;
 
         return layoverDuration;
     }
@@ -51,7 +60,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
     const flightTime = (flightDuration) => {
 
         const momentFlightDuration = moment.duration(flightDuration);
-        const flightTime = `${momentFlightDuration.hours()} hours ${momentFlightDuration.minutes()} minutes`
+        const flightTime = `${momentFlightDuration.hours()}h ${momentFlightDuration.minutes()}m`
         return flightTime;
 
     }
@@ -60,7 +69,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
     const exactTimeFromUTC = (utcTime) => {
 
         const utcTimeData = moment.utc(utcTime);
-        const formattedTime = utcTimeData.format('h:mm A');
+        const formattedTime = utcTimeData.format('ddd, MMM D · h:mm A');
         return formattedTime;
     }
 
@@ -76,6 +85,8 @@ const FlightDataCreation = async (flightControllerData, k) => {
     const newFlightData = new Flight({
 
         totalFlightPrice: flightsDataObject[chosenFlightDataObject].price.grandTotal,
+        originCity: await getCityData(departureSegmentData[0].departure.iataCode),
+        destinationCity: await getCityData(returnSegmentData[0].departure.iataCode),
         departingFlights: {
             flightNumber1: departureSegmentData[0].carrierCode + departureSegmentData[0].number,
             airline1: await getAirlineData(departureSegmentData[0].carrierCode),
