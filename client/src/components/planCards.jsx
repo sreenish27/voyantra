@@ -58,10 +58,14 @@ const PlanCards = () => {
 
     },[]);
 
+
     return(
         <>
+
         {/* Below is an entire trip card format which I will use to render all the tripcards */}
-        <div className = "grid gap-y-[60px] mx-[200px] grid-cols-3 ml-[-100px]">
+        {isTripFlightData.length > 0 && (
+        
+        <div className = "grid gap-y-[60px] mx-[250px] grid-cols-4 ml-[-150px]">
         {isTripFlightData.map((flightData, index) => (
 
             <div key={index}>
@@ -312,6 +316,7 @@ const PlanCards = () => {
                     )}
 
                     {/* below is the divider line, it must come just after the end of departing flights and the location must adjust based on the no of stops */}
+                    <div className = "relative top-[200px]">
                     <div className= "relative top-[-520px]">
                     <hr className="h-px my-24 border-0 w-[720px] bg-gray-300 mx-auto"></hr>
                     </div>
@@ -367,6 +372,8 @@ const PlanCards = () => {
 
                     </div>
 
+                    </div>
+
                 </div>
             )} 
 
@@ -375,6 +382,8 @@ const PlanCards = () => {
         ))}
         
         </div>
+
+        )}
         </>
     );
 }

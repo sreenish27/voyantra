@@ -8,8 +8,7 @@ const processUserInput = (inputFromUser) => {
 
         const parsedUserInput = JSON.parse(storeGlobalUserInput);
 
-        //extracting, processing the user input in the format I want and storing it in variables
-        const userBudget = Number(parsedUserInput.BudgetInput);
+        
         //Departing date
         const userDepartDate = parsedUserInput.Depart;
         const parsedDepartDate = parse(userDepartDate, 'MMMM dd', new Date());
@@ -37,7 +36,6 @@ const processUserInput = (inputFromUser) => {
 
         //putting all the processed input data into an object and exporting it so that it is easier to handle elsewhere in the server-side code for further processessing
         const apiReadyUserInput = {
-            "budget":userBudget,
             "departDate":formattedDepartDate,
             "returnDate":formattedReturnDate,
             "fromLocation":userFromLocation,

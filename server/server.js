@@ -5,7 +5,6 @@ import {DB_CONNECTION, PORT} from './config.js';
 import FlightDataController from './controller/flightDataController.js';
 import storeAllTierFlightData from './modelControllerInteraction/flightDataCreation.js';
 import storeAllTierStaytData from './modelControllerInteraction/stayDataCreation.js';
-import { setRawUserInput, getRawUserInput } from './userInputStore.js';
 import processUserInput from './handleUserInput.js';
 import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
 import StayDataController from './controller/stayDataController.js';
@@ -15,6 +14,7 @@ import fetchAirportData from './createdApis/airportApi.js';
 import fetchTripCardData from './createdApis/tripCardClientSideapi.js';
 import fetchAirlineLogo from './createdApis/airlineLogosApi.js';
 import fetchCityData from './createdApis/cityApi.js';
+import session from 'express-session';
 
 
 export const app = express();
@@ -25,6 +25,17 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+//calling the session function
+app.use(session({
+    secret: 'aSdh576&*6',
+    saveUninitialized: false,
+    resave: false,
+    cookie:{
+        maxAge: 60000 * 60 * 2,
+    }
+})
+);
 
 //establishing a connection to mongoDB
 try {
@@ -42,6 +53,9 @@ try {
 };
 
 app.get('/', (req, res) => {
+    console.log(req.session);
+    console.log(req.session.id);
+    req.session.visited = true;
     res.send(`Welcome to Voyantra!`);
 });
 
@@ -49,14 +63,9 @@ app.get('/', (req, res) => {
 app.post('/api/userInput', async (req, res) => {
 
     const userinput = req.body;
-    try{
-        setRawUserInput(JSON.stringify(userinput));
-    } catch (err) {
-        console.log(`Error in the json stringify of user input: ${err}`);
-    }
     
     try{
-        setApiReadyInput(processUserInput(getRawUserInput()));
+        setApiReadyInput(processUserInput(JSON.stringify(userinput)));
         console.log(getApiReadyUserInput());
     } catch(err){
         console.log(`Error in processing user input: ${err}`);

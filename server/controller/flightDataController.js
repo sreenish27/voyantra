@@ -59,10 +59,14 @@ const FlightDataController = async (apireadyuserinput) => {
                 longitude:longitudeData
             });
 
+            
             return response;
+        
             
         } catch (err) {
             console.log(`Error while retrieving the IATA code of nearest airports for given location: ${err}`);
+            console.log(latitudeData);
+            console.log(longitudeData);
         }
     }
 

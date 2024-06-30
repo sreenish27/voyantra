@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsOpen } from '../reduxSlices/datePickerOpenCloseSlice.js';
 import axios from 'axios';
@@ -7,8 +7,6 @@ const SearchBar = () => {
 
     const dispatch = useDispatch();
 
-    //just to get the budget value
-    const [budget, setIsBudget] = useState(0);
 
     const [isWhoDropdownOpen, setIsWhoDropdownOpen] = useState(false);
 
@@ -28,6 +26,17 @@ const SearchBar = () => {
     const [isChildrenClicked, setIsChildrenClicked] = useState(0);
     const [isInfantClicked, setIsInfantClicked] = useState(0);
     const [isPetClicked, setIsPetClicked] = useState(0);
+
+    //Establishing debounce function to take care of performance and limit the API calls to permissible limits
+    const debounce = (func, delay) => {
+        let timerId = null;
+        return(...args) => {
+            clearTimeout(timerId);
+            timerId = setTimeout(() => {
+                func(...args);
+            },delay)
+        };
+    };
 
     //When user starts typing in the To search bar it must open
     const [isUserSearchingDestinations, setIsUserSearchingDestinations] = useState(null);
@@ -52,22 +61,11 @@ const SearchBar = () => {
     const [isLocationStartDataDisplay, setIsLocationStartDataDisplay] = useState('');
     const locationStartDisplayRef = useRef(null);
 
-    //Establishing debounce function to take care of performance and limit the API calls to permissible limits
-    const debounce = (func, delay) => {
-        let timerId = null;
-        return(...args) => {
-            clearTimeout(timerId);
-            timerId = setTimeout( async () => {
-                await func(...args)
-            }, delay);
-        };
-    };
-
-    //To automatically update the search results under the To search bar
+    //To automatically update the search results under the To search bar, (I have memoized the function using useCallback to a)
     const fetchDestinationResults = async (isUserSearchingDestinations) => {
         
-        if(isUserSearchingDestinations != ''){
-            const api_places_url = `https://geocode.maps.co/search?q=${isUserSearchingDestinations}&api_key=664e9777ab2b4679205092qzedd4b91`
+        if(isUserSearchingDestinations != null){
+            const api_places_url = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${isUserSearchingDestinations}&format=json`
 
            
                 try{
@@ -81,17 +79,28 @@ const SearchBar = () => {
         } else {
             setIsPlaceData([]);
         }     
-    }
+    };
 
-    //debounce the function
-    const debouncedFetchDestinationResults = debounce(fetchDestinationResults, 1200);
+    //a function to limit the no of API calls only the after it is completely written it will be called and avoids crashing the frontend by overloading API requests
+    const debouncefetchDestinationResults = useCallback(
+        debounce((isUserSearchingDestinations) => {
+            fetchDestinationResults(isUserSearchingDestinations);
+        },1200),
+        []
+    )
+
+    //establishing an useEffect so that whenever the user types the debounced function gets executed
+    useEffect(() => {
+        debouncefetchDestinationResults(isUserSearchingDestinations);
+    },[isUserSearchingDestinations])
 
     //To automatically update the search results under the From search bar
-    useEffect(() => {
-        if(isUserSearchingLocation != ''){
+    const fetchLocationResults = async (isUserSearchingLocation) => {
+        
+        if(isUserSearchingLocation != null){
             const api_places_url = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${isUserSearchingLocation}&format=json`
 
-            const fetchResults = async () => {
+           
                 try{
                     const response = await fetch(api_places_url);
                     const locationStart_data = await response.json();
@@ -99,13 +108,24 @@ const SearchBar = () => {
                 } catch(err){
                     console.log(`Error in trying to get the places:${err}`);
                 }
-            };
 
-            fetchResults();
         } else {
             setIsLocationStartData([]);
-        }
-    }, [isUserSearchingLocation]);
+        }     
+    }
+
+     //a function to limit the no of API calls only the after it is completely written it will be called and avoids crashing the frontend by overloading API requests
+     const debouncefetchLocationResults = useCallback(
+        debounce((isUserSearchingLocation) => {
+            fetchLocationResults(isUserSearchingLocation);
+        },1200),
+        []
+     )
+    
+    //establishing an useEffect so that whenever the user types the debounced function gets executed
+    useEffect(() => {
+        debouncefetchLocationResults(isUserSearchingLocation);
+    }, [isUserSearchingLocation])
 
    //handle the input value that should be displayed in Add guests in the search bar
    useEffect(() => {
@@ -151,7 +171,7 @@ const SearchBar = () => {
     setIsFromDropdownOpen(!isFromDropdownOpen);
    }
 
-    //Handle the From search bar dropdown for when user starts searching for destinations
+    //Handle the From search bar dropdown for when user starts searching for locations
     const handlerFromDropdownType = (e) => {
 
     const value = e.target.value;
@@ -171,7 +191,6 @@ const SearchBar = () => {
         const value = e.target.value;
         setIsUserSearchingDestinations(value);
         setIsToDropdownOpen(true);
-        debouncedFetchDestinationResults(value);
     }
 
     //Handles the who search bar drop down
@@ -276,7 +295,7 @@ const SearchBar = () => {
 
     //Preparing all inputs to be sent to server side
     const [allUserInput, setAllUserInput] = useState({
-        BudgetInput: '',
+        
         From: '',
         To: '',
         Depart:'',
@@ -287,25 +306,26 @@ const SearchBar = () => {
     //Update the allUserInput dictionary to get all inputs in one place (in our case a dictionary)
     const handleSearchClick = async () => {
 
-        setIsBudget(document.getElementById("budgetInput").value);
-        setAllUserInput({
-            BudgetInput: budget,
-            From: isLocationStartDataDisplay,
-            To: isDestinationDataDisplay,
-            Depart:startDate,
-            Return:endDate,
-            Who:isGuestData,
-        })
+        
+        const Startdate = startDate;
+        const Enddate = endDate;
 
-        setTimeout (async () => {
-            try{
+        const updatedUserInput =  { 
+                                    From: isLocationStartDataDisplay,
+                                    To: isDestinationDataDisplay,
+                                    Depart:Startdate,
+                                    Return:Enddate,
+                                    Who:isGuestData,
+                                    }
+        setAllUserInput(updatedUserInput);
+
+        try{
                 const response = await axios.post('http://localhost:4000/api/userInput', allUserInput);
                 console.log("User input sent from client side.")
                 console.log(response.data);
             } catch(error){
                 console.log(`Error encountered in sending user input to server: ${error}`);
             }
-        }, 100)  
         
     }
     return(
@@ -314,11 +334,7 @@ const SearchBar = () => {
         <div className = "absolute top-28 h-16 flex flex-row rounded-searchBox bg-white shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none">
 
 
-        <button className = "hover:bg-gray-100 px-5 py-2 w-[180px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-            <div className="relative right-[30px]">Budget</div>
-          
-                    <input id="budgetInput" className="w-[90px] text-black focus:outline-none focus:ring-0 hover:bg-gray-100 relative right-[10px] font-light text-sm" type="text" placeholder="Amount in $"/> 
-            </button>
+        
 
             <button onClick={handlerFromDropdownClick} className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
             <div className="relative right-[50px]">From</div>
@@ -441,7 +457,7 @@ const SearchBar = () => {
 
         {isToDropdownOpen && isPlaceData.length > 0 && (
 
-            <div className="absolute top-[182px] right-[440px] z-10 mt-2 w-[370px] origin-top-right rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">     
+            <div className="absolute top-[182px] right-[640px] z-10 mt-2 w-[370px] origin-top-right rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">     
             
             
             <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">

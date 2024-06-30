@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const dateRangePickerSlice = createSlice({
     name: 'dateRangePicker',
     initialState: {
-        startDate: '',
-        endDate: '',
+        startDate: null,
+        endDate: null,
     },
 
     reducers:{
