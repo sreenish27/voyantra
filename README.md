@@ -4,7 +4,7 @@ Voyantra is a trip planning platform designed to simplify the process of creatin
 
 ## Features
 
-- **Customized Itineraries**: Users can input their budget, dates, number of guests, origin, and destination to receive personalized trip plans.
+- **Customized Itineraries**: Users can input their dates, number of guests, origin, and destination to receive personalized trip plans.
 - **Seamless Booking Process**: The platform integrates trip data and document storage, displaying information in an easily accessible card format.
 - **Trip Sharing**: Users can share their trip plans with others, enabling friends to adjust dates and receive updated travel options.
 
