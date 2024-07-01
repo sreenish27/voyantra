@@ -3,7 +3,11 @@ import { Stay } from "../models/stayModel.js";
 import { TripCard } from "../models/tripCardModel.js";
 
 //iterating through all the flight and stay objects to create all combinations meaning, x flights, y stays, then I will get x*y trip cards
-const allTripCards = async () => {
+const allTripCards = async (sessionid) => {
+
+
+    //store the sessionid in this variable
+    const sessionId = sessionid;
 
     // //getting the flights and stays collection from MongoDB to create the tripCard object which will be used to present these cards on the client side
     const flightsArray = await Flight.find({});
@@ -17,6 +21,7 @@ const allTripCards = async () => {
     const tripCardDataCreation = async (flightObject, stayObject) => {
 
         const newTripCard = new TripCard({
+            SessionId: sessionId,
             flight: flightObject,
             stay: stayObject,
         })

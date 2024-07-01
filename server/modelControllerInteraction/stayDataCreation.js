@@ -1,11 +1,14 @@
 import { Stay } from "../models/stayModel.js";
 
-const StayDataCreation = async (stayControllerData, k) => {
+const StayDataCreation = async (stayControllerData, k, sessionid) => {
     
         //getting just the data object as that is where all the info is
         const stayDataObject = stayControllerData.data;
     
         const chosenStayDataObject = k;
+
+        //store the sessionid in this variable
+         const sessionId = sessionid;
 
         const stayData = stayDataObject[chosenStayDataObject];
 
@@ -13,6 +16,7 @@ const StayDataCreation = async (stayControllerData, k) => {
         const stayDataOther = stayData.offers[0];
 
         const newStayData = new Stay({
+            SessionId: sessionId,
             name: stayData.hotel.name,
             checkInTime: stayDataOther.checkInDate,
             checkOutTime: stayDataOther.checkOutDate,
@@ -39,10 +43,10 @@ const StayDataCreation = async (stayControllerData, k) => {
 const noOfStayData = 5;
 
 //the below is to store 4 flight objects in MongoDB
-const storeAllTierStaytData = async (stayControllerData) => {
+const storeAllTierStaytData = async (stayControllerData, sessionid) => {
 
     for(let i=0; i<noOfStayData; i++){
-       await StayDataCreation(stayControllerData, i);
+       await StayDataCreation(stayControllerData, i, sessionid);
     }
     
 }

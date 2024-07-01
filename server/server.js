@@ -62,39 +62,34 @@ app.get('/', (req, res) => {
 //recieve all user input from client side
 app.post('/api/userInput', async (req, res) => {
 
-    const userinput = req.body;
+    //store userinput received from client side assocaited with the correct user
+    req.session.userinput = req.body;
     
     try{
-        setApiReadyInput(processUserInput(JSON.stringify(userinput)));
+        setApiReadyInput(processUserInput(JSON.stringify(req.session.userinput)));
         console.log(getApiReadyUserInput());
     } catch(err){
         console.log(`Error in processing user input: ${err}`);
         throw err;
     }
+    
+    //storing the processed input with the correct session
+    req.session.processedInput = getApiReadyUserInput();
 
-    const processedInput = getApiReadyUserInput();
+    //getting the session id so that I can create collection names with session id to handle multiple users (const does not make is constant always only within the scope, when a new request comes in a new session id is created so we good!)
+    const sessionId = req.session.id;
 
     //this is the part where the flight data gets stored
-    const flight_output = await FlightDataController(processedInput)
-    storeAllTierFlightData(flight_output);
+    const flight_output = await FlightDataController(req.session.processedInput);
+    storeAllTierFlightData(flight_output, sessionId);
 
     //the part where stay data gets stored
-    const stay_output = await StayDataController(processedInput);
-    storeAllTierStaytData(stay_output);
+    const stay_output = await StayDataController(req.session.processedInput);
+    storeAllTierStaytData(stay_output, sessionId);
 
     //the part where trip cards are created
-    allTripCards();
+    allTripCards(sessionId);
 });
-
-app.get('/api/userInput', async (req, res) => {
-    try{
-        const response = await fetchTripCardData();
-        return response;
-    } catch(err){
-        console.log(`Error in getting the tripcards from the database: ${err}`);
-    }
-})
-
 
 //Dashboard route - It must have all individual user specific useful details in it
 app.get('/dashboard', (req, res) => {
@@ -137,17 +132,6 @@ app.get(`/api/testing/city/:iataCode`, async(req, res) => {
     
 })
 
-//checking if I am getting the trip card data and also setting up the endpoint simultaneously
-app.get('/api/testing/tripcards', async(req, res) => {
-    try{
-        const response = await fetchTripCardData();
-        res.send(response);
-    } catch(err){
-        console.log(`Error in getting the trip cards: ${err}`);
-    }
-   
-})
-
 //setting up an endpoint for getting airline logos (in the form of base64 strings which will be rendered later in the client side)
 app.get(`/api/testing/airlinelogo/:iatacode`, async (req, res) => {
     try{
@@ -157,6 +141,18 @@ app.get(`/api/testing/airlinelogo/:iatacode`, async (req, res) => {
     }catch(err){
         res.response(500).send({err: err.message});
     }
+})
+
+//checking if I am getting the trip card data and also setting up the endpoint for tripcards which will be used to get the data in client-side
+app.get('/api/testing/tripcards', async(req, res) => {
+    try{
+        const sessionId = req.session.id;
+        const response = await fetchTripCardData(sessionId);
+        res.send(response);
+    } catch(err){
+        console.log(`Error in getting the trip cards: ${err}`);
+    }
+   
 })
 
 

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const staySchema = new mongoose.Schema({
+    SessionId: {type: String},
     name: { type: String},
     checkInTime: { type: Date},
     checkOutTime: { type: Date},

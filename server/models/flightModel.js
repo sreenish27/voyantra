@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const flightSchema = new mongoose.Schema(
     {
+        SessionId:String,
         totalFlightPrice:String,
         originCity: String,
         destinationCity: String,

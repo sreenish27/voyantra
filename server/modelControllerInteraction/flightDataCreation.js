@@ -1,12 +1,15 @@
 import { Flight } from "../models/flightModel.js";
 import moment from "moment";
 
-const FlightDataCreation = async (flightControllerData, k) => {
+const FlightDataCreation = async (flightControllerData, k, sessionid) => {
 
     //getting just the data object as that is where all the info is
     const flightsDataObject = flightControllerData.data;
 
     const chosenFlightDataObject = k;
+
+    //store the sessionid in this variable
+    const sessionId = sessionid;
 
     //as we are interested only in the data inside itineraries we are creating it here, to make the code clean
     const flightItinerariesData = flightsDataObject[chosenFlightDataObject].itineraries;
@@ -84,6 +87,7 @@ const FlightDataCreation = async (flightControllerData, k) => {
 
     const newFlightData = new Flight({
 
+        SessionId: sessionId,
         totalFlightPrice: flightsDataObject[chosenFlightDataObject].price.grandTotal,
         originCity: await getCityData(departureSegmentData[0].departure.iataCode),
         destinationCity: await getCityData(returnSegmentData[0].departure.iataCode),
@@ -161,10 +165,10 @@ const FlightDataCreation = async (flightControllerData, k) => {
 const noOfFlightData = 5;
 
 //the below is to store 4 flight objects in MongoDB
-const storeAllTierFlightData = async (flightControllerData) => {
+const storeAllTierFlightData = async (flightControllerData, sessionid) => {
 
     for(let i=0; i<noOfFlightData; i++){
-       await FlightDataCreation(flightControllerData, i);
+       await FlightDataCreation(flightControllerData, i, sessionid);
     }
     
 }
