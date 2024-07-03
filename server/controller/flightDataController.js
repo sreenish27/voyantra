@@ -23,7 +23,6 @@ const FlightDataController = async (apireadyuserinput) => {
     const getLatLon = async (x) => {
 
         //we will process the from and to locations to get the IATA code to be passed to our API calls
-        // const locationData = `https://geocode.maps.co/search?q=${x}&api_key=664e9777ab2b4679205092qzedd4b91`;
         const locationData = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${x}&format=json`;
 
         try{
@@ -58,15 +57,12 @@ const FlightDataController = async (apireadyuserinput) => {
                 latitude:latitudeData,
                 longitude:longitudeData
             });
-
             
             return response;
         
             
         } catch (err) {
             console.log(`Error while retrieving the IATA code of nearest airports for given location: ${err}`);
-            console.log(latitudeData);
-            console.log(longitudeData);
         }
     }
 

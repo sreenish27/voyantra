@@ -8,7 +8,6 @@ const processUserInput = (inputFromUser) => {
 
         const parsedUserInput = JSON.parse(storeGlobalUserInput);
 
-        
         //Departing date
         const userDepartDate = parsedUserInput.Depart;
         const parsedDepartDate = parse(userDepartDate, 'MMMM dd', new Date());

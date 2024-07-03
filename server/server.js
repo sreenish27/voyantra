@@ -89,6 +89,17 @@ app.post('/api/userInput', async (req, res) => {
 
     //the part where trip cards are created
     allTripCards(sessionId);
+
+    //checking if I am getting the trip card data and also setting up the endpoint for tripcards which will be used to get the data in client-side (moving this inside my post request for 2 reasons, to use the session id correctly and to trigger it immedietly as the search button is clicked)
+    app.get('/api/testing/tripcards', async(req, res) => {
+        try{
+            const response = await fetchTripCardData(sessionId);
+            res.send(response);
+        } catch(err){
+            console.log(`Error in getting the trip cards: ${err}`);
+        }
+    
+    })
 });
 
 //Dashboard route - It must have all individual user specific useful details in it
@@ -143,17 +154,7 @@ app.get(`/api/testing/airlinelogo/:iatacode`, async (req, res) => {
     }
 })
 
-//checking if I am getting the trip card data and also setting up the endpoint for tripcards which will be used to get the data in client-side
-app.get('/api/testing/tripcards', async(req, res) => {
-    try{
-        const sessionId = req.session.id;
-        const response = await fetchTripCardData(sessionId);
-        res.send(response);
-    } catch(err){
-        console.log(`Error in getting the trip cards: ${err}`);
-    }
-   
-})
+
 
 
 

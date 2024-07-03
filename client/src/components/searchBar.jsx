@@ -304,11 +304,15 @@ const SearchBar = () => {
     });
 
     //Update the allUserInput dictionary to get all inputs in one place (in our case a dictionary)
+    
     const handleSearchClick = async () => {
 
         
         const Startdate = startDate;
         const Enddate = endDate;
+
+        console.log(Startdate);
+        console.log(Enddate);
 
         const updatedUserInput =  { 
                                     From: isLocationStartDataDisplay,
@@ -320,7 +324,7 @@ const SearchBar = () => {
         setAllUserInput(updatedUserInput);
 
         try{
-                const response = await axios.post('http://localhost:4000/api/userInput', allUserInput);
+                const response = await axios.post('http://localhost:4000/api/userInput', updatedUserInput);
                 console.log("User input sent from client side.")
                 console.log(response.data);
             } catch(error){
@@ -328,6 +332,7 @@ const SearchBar = () => {
             }
         
     }
+
     return(
         <>
         <div className = "flex flex-row justify-center w-full">

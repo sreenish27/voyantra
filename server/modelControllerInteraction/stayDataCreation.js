@@ -13,19 +13,19 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
         const stayData = stayDataObject[chosenStayDataObject];
 
         //just to make the code cleaner and easy to maintain
-        const stayDataOther = stayData.offers[0];
+        const stayDataOther = stayData?.offers?.[0];
 
         const newStayData = new Stay({
             SessionId: sessionId,
-            name: stayData.hotel.name,
-            checkInTime: stayDataOther.checkInDate,
-            checkOutTime: stayDataOther.checkOutDate,
-            amenities: stayDataOther.room.description.text,
-            numberOfBeds:stayDataOther.room.typeEstimated.beds ?? 1,
-            bedType: stayDataOther.room.typeEstimated.bedType,
-            numberOfGuests: stayDataOther.guests.adults,
-            totalPrice: stayDataOther.price.total,
-            cancellationPolicy: stayDataOther.policies.cancellations[0].deadline
+            name: stayData?.hotel?.name,
+            checkInTime: stayDataOther?.checkInDate,
+            checkOutTime: stayDataOther?.checkOutDate,
+            amenities: stayDataOther?.room.description.text,
+            numberOfBeds:stayDataOther?.room?.typeEstimated?.beds ?? 1,
+            bedType: stayDataOther?.room?.typeEstimated?.bedType ?? "King",
+            numberOfGuests: stayDataOther?.guests?.adults,
+            totalPrice: stayDataOther?.price?.total,
+            //cancellationPolicy: stayDataOther.policies?.cancellations[0]?.deadline ?? "not given",
         })
 
         //save the data in MongoDB
