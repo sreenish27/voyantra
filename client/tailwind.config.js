@@ -18,6 +18,9 @@ export default {
         'searchBox': '3rem',
         'subSearchBox': '2.1rem',
       },
+      padding: {
+        '120': '30rem',
+      },
     },
   },
   plugins: [],
