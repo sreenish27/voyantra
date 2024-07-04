@@ -20,30 +20,6 @@ Voyantra is a trip planning platform designed to simplify the process of creatin
 
 This project is currently in progress. Key features are being developed and refined to provide users with an efficient and enjoyable trip planning experience.
 
-## Getting Started
-
-To run this project locally:
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/voyantra.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd voyantra
-   ```
-3. Install dependencies for both the frontend and backend:
-   ```bash
-   npm install
-   cd client
-   npm install
-   cd ..
-   ```
-4. Start the development servers:
-   ```bash
-   npm run dev
-   ```
-
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit pull requests for any improvements or new features.
