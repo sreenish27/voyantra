@@ -2,17 +2,15 @@ import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsOpen } from '../reduxSlices/datePickerOpenCloseSlice.js';
 import axios from 'axios';
+import {Autocomplete} from '@react-google-maps/api'
+
+
 
 const SearchBar = () => {
 
-    const dispatch = useDispatch();
-
+    const dispatch = useDispatch();   
 
     const [isWhoDropdownOpen, setIsWhoDropdownOpen] = useState(false);
-
-    const [isFromDropdownOpen, setIsFromDropdownOpen] = useState(false);
-
-    const [isToDropdownOpen, setIsToDropdownOpen] = useState(false);
 
     //handle dates in the from and to part of searchbar using redux (global state management system)
     const startDate = useSelector((state) => state.dateRangePicker.startDate);
@@ -27,105 +25,16 @@ const SearchBar = () => {
     const [isInfantClicked, setIsInfantClicked] = useState(0);
     const [isPetClicked, setIsPetClicked] = useState(0);
 
-    //Establishing debounce function to take care of performance and limit the API calls to permissible limits
-    const debounce = (func, delay) => {
-        let timerId = null;
-        return(...args) => {
-            clearTimeout(timerId);
-            timerId = setTimeout(() => {
-                func(...args);
-            },delay)
-        };
-    };
-
     //When user starts typing in the To search bar it must open
     const [isUserSearchingDestinations, setIsUserSearchingDestinations] = useState(null);
 
     //When user starts typing in the From search bar it must open
     const [isUserSearchingLocation, setIsUserSearchingLocation] = useState(null);
 
-    //When user starts typing the destination - store, update and clear the data
-    const [isPlaceData, setIsPlaceData] = useState([]);
-
-    //When user starts typing the start location - store, update and clear the data
-    const [isLocationStartData, setIsLocationStartData] = useState([]);
-
     //When user starts adding the people going for the trip store it as an array
     const [isGuestData, setIsGuestData] = useState('');
 
-    //When the user selects a place to go To I want it to be stored in this variable
-    const [isDestinationDataDisplay, setIsDestinationDataDisplay] = useState('');
-    const destinationDisplayRef = useRef(null);
-
-    //When the user selects a place to go From I want it to be stored in this variable
-    const [isLocationStartDataDisplay, setIsLocationStartDataDisplay] = useState('');
-    const locationStartDisplayRef = useRef(null);
-
-    //To automatically update the search results under the To search bar, (I have memoized the function using useCallback to a)
-    const fetchDestinationResults = async (isUserSearchingDestinations) => {
-        
-        if(isUserSearchingDestinations != null){
-            const api_places_url = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${isUserSearchingDestinations}&format=json`
-
-           
-                try{
-                    const response = await fetch(api_places_url);
-                    const place_data = await response.json();
-                    setIsPlaceData(place_data);
-                } catch(err){
-                    console.log(`Error in trying to get the places:${err}`);
-                }
-
-        } else {
-            setIsPlaceData([]);
-        }     
-    };
-
-    //a function to limit the no of API calls only the after it is completely written it will be called and avoids crashing the frontend by overloading API requests
-    const debouncefetchDestinationResults = useCallback(
-        debounce((isUserSearchingDestinations) => {
-            fetchDestinationResults(isUserSearchingDestinations);
-        },1200),
-        []
-    )
-
-    //establishing an useEffect so that whenever the user types the debounced function gets executed
-    useEffect(() => {
-        debouncefetchDestinationResults(isUserSearchingDestinations);
-    },[isUserSearchingDestinations])
-
-    //To automatically update the search results under the From search bar
-    const fetchLocationResults = async (isUserSearchingLocation) => {
-        
-        if(isUserSearchingLocation != null){
-            const api_places_url = `https://us1.locationiq.com/v1/search?key=pk.1e349ff8a694e26ecd3a3e66e6a1504b&q=${isUserSearchingLocation}&format=json`
-
-           
-                try{
-                    const response = await fetch(api_places_url);
-                    const locationStart_data = await response.json();
-                    setIsLocationStartData(locationStart_data);
-                } catch(err){
-                    console.log(`Error in trying to get the places:${err}`);
-                }
-
-        } else {
-            setIsLocationStartData([]);
-        }     
-    }
-
-     //a function to limit the no of API calls only the after it is completely written it will be called and avoids crashing the frontend by overloading API requests
-     const debouncefetchLocationResults = useCallback(
-        debounce((isUserSearchingLocation) => {
-            fetchLocationResults(isUserSearchingLocation);
-        },1200),
-        []
-     )
     
-    //establishing an useEffect so that whenever the user types the debounced function gets executed
-    useEffect(() => {
-        debouncefetchLocationResults(isUserSearchingLocation);
-    }, [isUserSearchingLocation])
 
    //handle the input value that should be displayed in Add guests in the search bar
    useEffect(() => {
@@ -143,55 +52,8 @@ const SearchBar = () => {
     }
    },[isAdultClicked, isChildrenClicked, isInfantClicked, isPetClicked]);
 
-   //handle giving the clicked destination data to the variable declared which will be displayed
 
-   const handlerDisplayPlaceData = (event) => {
 
-    destinationDisplayRef.current = event.target;
-    const destinationDisplayValue = destinationDisplayRef.current.textContent;
-    setIsDestinationDataDisplay(destinationDisplayValue);
-    setIsUserSearchingDestinations(destinationDisplayValue);
-    setIsToDropdownOpen(!isToDropdownOpen);
-   }
-
-   //handle giving the clicked location start data to the variable declared which will be displayed
-
-   const handlerLocationStartPlaceData = (event) => {
-
-    locationStartDisplayRef.current = event.target;
-    const locationsStartDisplayValue = locationStartDisplayRef.current.textContent;
-    setIsLocationStartDataDisplay(locationsStartDisplayValue);
-    setIsUserSearchingLocation(locationsStartDisplayValue);
-    setIsFromDropdownOpen(!isFromDropdownOpen);
-   }
-
-   //Handle the From search bar dropdown for Click
-   const handlerFromDropdownClick = () => {
-        
-    setIsFromDropdownOpen(!isFromDropdownOpen);
-   }
-
-    //Handle the From search bar dropdown for when user starts searching for locations
-    const handlerFromDropdownType = (e) => {
-
-    const value = e.target.value;
-    setIsUserSearchingLocation(value);
-    setIsFromDropdownOpen(true);
-   }
-
-    //Handle the To search bar dropdown for Click
-    const handlerToDropdownClick = () => {
-        
-        setIsToDropdownOpen(!isToDropdownOpen);
-    }
-    
-    //Handle the To search bar dropdown for when user starts searching for destinations
-    const handlerToDropdownType = (e) => {
-
-        const value = e.target.value;
-        setIsUserSearchingDestinations(value);
-        setIsToDropdownOpen(true);
-    }
 
     //Handles the who search bar drop down
     const handlerWhoDropdownClick = () => {
@@ -293,6 +155,21 @@ const SearchBar = () => {
         dispatch(setIsOpen(!isOpen));
     }
 
+    const LocationautocompleteRef = useRef(null);
+    const DestinationautocompleteRef = useRef(null);
+
+    //handles capturing the start location data
+    const onPlaceChanged = () => {
+        const Location = LocationautocompleteRef.current.getPlace();
+        setIsUserSearchingLocation(Location.formatted_address);
+    }
+
+    //handles capturing the start location data
+    const onDestinationChanged = () => {
+        const Destination = DestinationautocompleteRef.current.getPlace();
+        setIsUserSearchingDestinations(Destination.formatted_address);
+    }
+
     //Preparing all inputs to be sent to server side
     const [allUserInput, setAllUserInput] = useState({
         
@@ -307,16 +184,13 @@ const SearchBar = () => {
     
     const handleSearchClick = async () => {
 
-        
+        setIsWhoDropdownOpen(false);
         const Startdate = startDate;
         const Enddate = endDate;
 
-        console.log(Startdate);
-        console.log(Enddate);
-
         const updatedUserInput =  { 
-                                    From: isLocationStartDataDisplay,
-                                    To: isDestinationDataDisplay,
+                                    From: isUserSearchingLocation,
+                                    To: isUserSearchingDestinations,
                                     Depart:Startdate,
                                     Return:Enddate,
                                     Who:isGuestData,
@@ -341,21 +215,31 @@ const SearchBar = () => {
 
         
 
-            <button onClick={handlerFromDropdownClick} className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-            <div className="relative right-[50px]">From</div>
+            <div className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
+            <div className="relative right-[-7px]">From</div>
           
                 <form className = "relative right-[-6px] text-gray-400 font-light text-sm">
-                    <input onChange={handlerFromDropdownType} className="text-black focus:outline-none focus:ring-0 hover:bg-gray-100" type="text" placeholder="Search your location" value={isUserSearchingLocation}/> 
+                    <Autocomplete
+                    onLoad={(auto) => { LocationautocompleteRef.current = auto}}
+                    onPlaceChanged={onPlaceChanged}
+                    >
+                    <input className="text-black focus:outline-none focus:ring-0 hover:bg-gray-100" type="text" placeholder="Search your location"/> 
+                    </Autocomplete>
                 </form>
-            </button>
+            </div>    
 
-            <button onClick={handlerToDropdownClick} className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-            <div className="relative right-[50px]">To</div>
+            <div className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
+            <div className="relative right-[-14px]">To</div>
           
                 <form className = "relative right-[-15px] text-gray-400 font-light text-sm">
-                    <input onChange={handlerToDropdownType} className="text-black focus:outline-none focus:ring-0 hover:bg-gray-100" type="text" placeholder="Search destinations" value={isUserSearchingDestinations}/> 
+                <Autocomplete
+                    onLoad={(auto) => { DestinationautocompleteRef.current = auto}}
+                    onPlaceChanged={onDestinationChanged}
+                    >
+                    <input className="text-black focus:outline-none focus:ring-0 hover:bg-gray-100" type="text" placeholder="Search destinations"/>
+                    </Autocomplete>
                 </form>
-            </button>
+            </div>
             
             <button onClick={handleDatePickerOpenClose} className = "hover:bg-gray-100 px-5 py-2 rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
                 <div className="relative right-[42px]">Depart</div>
@@ -460,65 +344,6 @@ const SearchBar = () => {
             </div>
         )}
 
-        {isToDropdownOpen && isPlaceData.length > 0 && (
-
-            <div className="absolute top-[182px] right-[640px] z-10 mt-2 w-[370px] origin-top-right rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">     
-            
-            
-            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-                <div className="relative justify-start text-gray-700 font-light text-[17px]">{isPlaceData[0].display_name}</div>
-            </button>
-
-            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-                <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[1].display_name}</div>
-            </button>
-
-            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-                <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[2].display_name}</div>
-            </button>
-
-            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-                <div className="relative  text-gray-700 font-light text-[17px]">{isPlaceData[3].display_name}</div>
-            </button>
-
-            <button onClick={handlerDisplayPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-                <div className="relative text-gray-700 font-light text-[17px]">{isPlaceData[4].display_name}</div>
-            </button>
-
-            </div>
-        )}
-
-        {isFromDropdownOpen && isLocationStartData.length > 0 && (
-
-        <div className="absolute top-[182px] right-[840px] z-10 mt-2 w-[370px] origin-top-right rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">     
-
-
-        <button onClick={handlerLocationStartPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-            <div className="relative justify-start text-gray-700 font-light text-[17px]">{isLocationStartData[0].display_name}</div>
-        </button>
-
-        <button onClick={handlerLocationStartPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-            <div className="relative  text-gray-700 font-light text-[17px]">{isLocationStartData[1].display_name}</div>
-        </button>
-
-        <button onClick={handlerLocationStartPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-            <div className="relative  text-gray-700 font-light text-[17px]">{isLocationStartData[2].display_name}</div>
-        </button>
-
-        <button onClick={handlerLocationStartPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-            <div className="relative  text-gray-700 font-light text-[17px]">{isLocationStartData[3].display_name}</div>
-        </button>
-
-        <button onClick={handlerLocationStartPlaceData} className="py-2 px-2 h-[60px] ring-1 ring-white ring-opacity-5 w-[370px] rounded-custom hover:bg-gray-100" role="none">
-            <div className="relative text-gray-700 font-light text-[17px]">{isLocationStartData[4].display_name}</div>
-        </button>
-
-        </div>
-        )}  
-        
-        
-
-        
         </>
     );
 }

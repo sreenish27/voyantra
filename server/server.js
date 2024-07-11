@@ -4,7 +4,7 @@ import cors from 'cors';
 import {DB_CONNECTION, PORT} from './config.js';
 import FlightDataController from './controller/flightDataController.js';
 import storeAllTierFlightData from './modelControllerInteraction/flightDataCreation.js';
-import storeAllTierStaytData from './modelControllerInteraction/stayDataCreation.js';
+import storeAllTierStayData from './modelControllerInteraction/stayDataCreation.js';
 import processUserInput from './handleUserInput.js';
 import { setApiReadyInput, getApiReadyUserInput } from './apiReadyUserInputStore.js';
 import StayDataController from './controller/stayDataController.js';
@@ -85,10 +85,10 @@ app.post('/api/userInput', async (req, res) => {
 
     //the part where stay data gets stored
     const stay_output = await StayDataController(req.session.processedInput);
-    storeAllTierStaytData(stay_output, sessionId);
+    storeAllTierStayData(stay_output, sessionId);
 
     //the part where trip cards are created
-    allTripCards(sessionId);
+    await allTripCards(sessionId);
 
     //checking if I am getting the trip card data and also setting up the endpoint for tripcards which will be used to get the data in client-side (moving this inside my post request for 2 reasons, to use the session id correctly and to trigger it immedietly as the search button is clicked)
     app.get('/api/testing/tripcards', async(req, res) => {

@@ -9,6 +9,13 @@ const allTripCards = async (sessionid) => {
     //store the sessionid in this variable
     const sessionId = sessionid;
 
+    //check if the stay data is in mongoDB before going ahead and storing them and stuff
+    const staysExist = await Stay.exists({ SessionId: sessionid });
+
+    if(!staysExist){
+        await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+
     // //getting the flights and stays collection from MongoDB to create the tripCard object which will be used to present these cards on the client side
     const flightsArray = await Flight.find({});
     const staysArray =  await Stay.find({});
@@ -37,7 +44,7 @@ const allTripCards = async (sessionid) => {
     //a for loop to create all combinations of trip cards
     for(let i =0; i < flightsArrayLength; i++){
         for(let j=0; j<stayArrayLength; j++){
-            tripCardDataCreation(flightsArray[i], staysArray[j]);
+            await tripCardDataCreation(flightsArray[i], staysArray[j]);
         }
     }
 }

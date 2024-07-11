@@ -118,7 +118,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
             destinationAirport: departureSegmentData[2] ? await getAirportData(departureSegmentData[2].arrival.iataCode) : departureSegmentData[1] ? await getAirportData(departureSegmentData[1].arrival.iataCode) : await getAirportData(departureSegmentData[0].arrival.iataCode),
             noOfStops: departureSegmentData[2] ? 2 : departureSegmentData[1] ? 1 : 0,
             totalFlightTime: departureSegmentData[2] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration + departureSegmentData[2].duration) : departureSegmentData[1] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration) : flightTime(departureSegmentData[0].duration),
-            totalTime: departureSegmentData[2] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration + departureSegmentData[2].duration) : departureSegmentData[1] ? flightTime(departureSegmentData[0].duration + departureSegmentData[1].duration) : flightTime(departureSegmentData[0].duration),
+            totalTime: flightTime(flightItinerariesData[0].duration),
         },
         returningFlights: {
             flightNumber1: returnSegmentData[0].carrierCode + returnSegmentData[0].number,
@@ -147,7 +147,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
             originAirport: returnSegmentData[2] ? await getAirportData(returnSegmentData[2].arrival.iataCode) : returnSegmentData[1] ? await getAirportData(returnSegmentData[1].arrival.iataCode) : await getAirportData(returnSegmentData[0].arrival.iataCode),
             noOfStops: returnSegmentData[2] ? 2 : returnSegmentData[1] ? 1 : 0,
             totalFlightTime: returnSegmentData[2] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration + returnSegmentData[2].duration) : returnSegmentData[1] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration) : flightTime(returnSegmentData[0].duration),
-            totalTime: returnSegmentData[2] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration + returnSegmentData[2].duration) : returnSegmentData[1] ? flightTime(returnSegmentData[0].duration + returnSegmentData[1].duration) : flightTime(returnSegmentData[0].duration),
+            totalTime: flightTime(flightItinerariesData[1].duration),
         },
         
     })

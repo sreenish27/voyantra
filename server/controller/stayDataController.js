@@ -126,7 +126,7 @@ const StayDataController = async (apireadyuserinput) => {
     const stayAllData = await getStayFullData(hotelIdArrayLimited);
 
 
-    return stayAllData; 
+    return {stayAllData, destinationLocation}; 
 
 }
 

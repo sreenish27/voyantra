@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import amadeus from 'amadeus';
+import Amadeus from 'amadeus';
+import { Client } from '@googlemaps/google-maps-services-js';
 
 dotenv.config();
 
@@ -11,11 +12,14 @@ export const PORT = process.env.PORT;
 export const AMADEUS_USER_ID = process.env.AMADEUS_CLIENT_ID;
 export const AMADEUS_SECRET_KEY = process.env.AMADEUS_CLIENT_SECRET;
 
-//declare the global user input variable here to handle intialization problems
-// export let globaluserinput;
-
 //declaring the amadeus object to be used anywhere in the server side code to avoid repeated declaration across files
-export const amadeusObj = new amadeus ({
-    clientId:`${AMADEUS_USER_ID}`,
-    clientSecret:`${AMADEUS_SECRET_KEY}`
+export const amadeusObj = new Amadeus ({
+    clientId:AMADEUS_USER_ID,
+    clientSecret:AMADEUS_SECRET_KEY,
 });
+
+//exporting the google api key
+export const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_API_KEY;
+
+//declaring the google APIs object to be used anywhere in the server side code and avoid repeated declaration across files
+export const googlePlacesClient = new Client();

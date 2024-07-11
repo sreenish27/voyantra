@@ -11,9 +11,15 @@ const staySchema = new mongoose.Schema({
     numberOfGuests: { type: Number},
     totalPrice: { type: Number},
     averageRatings: { type: Number},
-    reviews: [String],
-    images: [String],
-    cancellationPolicy: { type: String},
-  });
+    reviews: {type: String},
+    image1: {type: Buffer},
+    image2: {type: Buffer},
+    image3: {type: Buffer},
+    cancellationPolicy: {type: String},
+    phone:{type: String},
+    address:{type: String},
+    googleMapLink:{type: String},
+    websiteLink:{type: String}
+    });
 
 export const Stay = mongoose.model('stay', staySchema);

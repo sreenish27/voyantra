@@ -1,5 +1,6 @@
 @import 'rsuite/DateRangePicker/styles';
 @import 'datepickercustomstyle.css';
+@import 'fromandtoinsearchbar.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

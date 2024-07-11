@@ -47,6 +47,7 @@ const FlightDataController = async (apireadyuserinput) => {
         return{lonData, latData};
     }
 
+
     
 
     //retreive the nearest airports IATA codes for both from and to locations
