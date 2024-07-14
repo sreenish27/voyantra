@@ -56,9 +56,6 @@ try {
 };
 
 app.get('/', (req, res) => {
-    console.log(req.session);
-    console.log(req.session.id);
-    req.session.visited = true;
     res.send(`Welcome to Voyantra!`);
 });
 
