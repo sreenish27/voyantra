@@ -38,19 +38,39 @@ app.use(express.json());
 //calling the session function
 app.use(session({
     secret: 'aSdh576&*6',
-    saveUninitialized: false,
+    saveUninitialized: true, // Changed to true for testing
     resave: false,
-    store:MongoStore.create({
-        mongoUrl:DB_CONNECTION,
-        collectionName:"sessions"
+    store: MongoStore.create({
+        mongoUrl: DB_CONNECTION,
+        collectionName: "sessions",
+        ttl: 60 * 60 * 2, // 2 hours
+        autoRemove: 'interval',
+        autoRemoveInterval: 10 // In minutes
     }),
-    cookie:{
+    cookie: {
         maxAge: 60000 * 60 * 2,
         sameSite: 'none',
         secure: process.env.NODE_ENV === 'production'
     }
-})
-);
+}));
+
+// Middleware to log session data
+app.use((req, res, next) => {
+    console.log('Session ID:', req.session.id);
+    console.log('Session Data:', req.session);
+    next();
+});
+
+// Test route to ensure session is being created and stored
+app.get('/test-session', (req, res) => {
+    if (req.session.views) {
+        req.session.views++;
+        res.send(`You have visited this page ${req.session.views} times`);
+    } else {
+        req.session.views = 1;
+        res.send('Welcome to this page for the first time!');
+    }
+});
 
 //establishing a connection to mongoDB
 try {
