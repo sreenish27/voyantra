@@ -5,7 +5,7 @@ import PlanCards from './components/planCards.jsx';
 import DatePickerToggle from './components/datePickerToggle.jsx';
 import {useJsApiLoader} from '@react-google-maps/api'
 import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 //keeping it outside because was getting a performance issue warning, of passing "libraries" as a prop
 const libraries = ['places'];
