@@ -15,6 +15,7 @@ import fetchTripCardData from './createdApis/tripCardClientSideapi.js';
 import fetchAirlineLogo from './createdApis/airlineLogosApi.js';
 import fetchCityData from './createdApis/cityApi.js';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 
 export const app = express();
@@ -39,6 +40,10 @@ app.use(session({
     secret: 'aSdh576&*6',
     saveUninitialized: false,
     resave: false,
+    store:MongoStore.create({
+        mongoUrl:DB_CONNECTION,
+        collectionName:"sessions"
+    }),
     cookie:{
         maxAge: 60000 * 60 * 2,
         sameSite: 'none',
