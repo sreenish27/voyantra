@@ -198,7 +198,7 @@ const SearchBar = () => {
         setAllUserInput(updatedUserInput);
 
         try{
-                const response = await axios.post('http://localhost:4000/api/userInput', updatedUserInput);
+                const response = await axios.post(`${BACKEND_URL}http://localhost:4000/api/userInput`, updatedUserInput);
                 console.log("User input sent from client side.")
                 console.log(response.data);
             } catch(error){
