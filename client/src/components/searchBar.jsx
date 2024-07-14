@@ -216,7 +216,7 @@ const SearchBar = () => {
         
 
             <div className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-            <div className="relative right-[-7px]">From</div>
+            <div className="relative right-[-7px] mt-1">From</div>
           
                 <form className = "relative right-[-6px] text-gray-400 font-light text-sm">
                     <Autocomplete
@@ -229,7 +229,7 @@ const SearchBar = () => {
             </div>    
 
             <div className = "hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox text-gray-700 font-normal text-sm" type="button">
-            <div className="relative right-[-14px]">To</div>
+            <div className="relative right-[-14px] mt-1">To</div>
           
                 <form className = "relative right-[-15px] text-gray-400 font-light text-sm">
                 <Autocomplete
