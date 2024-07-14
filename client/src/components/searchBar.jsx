@@ -198,7 +198,7 @@ const SearchBar = () => {
         setAllUserInput(updatedUserInput);
 
         try{
-                const response = await axios.post(`${process.env.BACKEND_URL}/api/userInput`, updatedUserInput);
+                const response = await axios.post(`https://voyantra.onrender.com/api/userInput`, updatedUserInput);
                 console.log("User input sent from client side.")
                 console.log(response.data);
             } catch(error){
