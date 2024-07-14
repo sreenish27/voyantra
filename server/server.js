@@ -21,7 +21,7 @@ export const app = express();
 
 
 app.use(cors({
-    origin: process.env.FRONTENDURL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials:true //because I am using sessions
 }));
 
