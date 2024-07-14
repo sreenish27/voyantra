@@ -10,15 +10,15 @@ const allTripCards = async (sessionid) => {
     const sessionId = sessionid;
 
     //check if the stay data is in mongoDB before going ahead and storing them and stuff
-    const staysExist = await Stay.exists({ SessionId: sessionid });
+    const staysExist = await Stay.exists({ SessionId: sessionId});
 
     if(!staysExist){
         await new Promise(resolve => setTimeout(resolve, 20000));
     }
 
     // //getting the flights and stays collection from MongoDB to create the tripCard object which will be used to present these cards on the client side
-    const flightsArray = await Flight.find({SessionId: sessionid });
-    const staysArray =  await Stay.find({SessionId: sessionid });
+    const flightsArray = await Flight.find({SessionId: sessionId });
+    const staysArray =  await Stay.find({SessionId: sessionId });
 
     //get the number of objects in each collection
     const flightsArrayLength = flightsArray.length;
