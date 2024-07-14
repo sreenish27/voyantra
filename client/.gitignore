@@ -28,3 +28,6 @@ dist-ssr
 
 # Ignore Gradle build output directory
 build
+
+# Environment variables
+.env

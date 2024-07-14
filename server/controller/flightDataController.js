@@ -124,12 +124,11 @@ const FlightDataController = async (apireadyuserinput) => {
             return response;   
         } catch(err) {
             console.log(`Error in retreiving the flight prices data: ${err}`);
-
         }
 
     }
 
-    const allFlightData =  getFlightData();
+    const allFlightData =  await getFlightData();
 
     return allFlightData;
 

@@ -13,7 +13,7 @@ const allTripCards = async (sessionid) => {
     const staysExist = await Stay.exists({ SessionId: sessionid });
 
     if(!staysExist){
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 20000));
     }
 
     // //getting the flights and stays collection from MongoDB to create the tripCard object which will be used to present these cards on the client side
@@ -24,6 +24,15 @@ const allTripCards = async (sessionid) => {
     const flightsArrayLength = flightsArray.length;
     const stayArrayLength = staysArray.length;
 
+    //creating a total number of tripcards metric to use it in client side to get all the cards accurately
+    const totalNoOfTripCards = flightsArrayLength * stayArrayLength;
+
+    // //the total price of the trip (adding stay and flight total price)
+    // const totalPrice = (flightObject, stayObject) => {
+    //     const price = Number(flightObject.totalFlightPrice) + Number(stayObject.totalPrice);
+    //     return price;
+    // }
+
     //a function to create the tripCard object which will later be used to created multiple cards
     const tripCardDataCreation = async (flightObject, stayObject) => {
 
@@ -31,6 +40,7 @@ const allTripCards = async (sessionid) => {
             SessionId: sessionId,
             flight: flightObject,
             stay: stayObject,
+            noOfTripCards: totalNoOfTripCards,
         })
 
         //save the data in MongoDB

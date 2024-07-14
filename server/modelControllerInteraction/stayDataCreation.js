@@ -45,6 +45,24 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
                     });
 
                     const placeDetailsData = placeDetailsResponse.data.result;
+
+                    //next I will use the placePhoto API to get the photos of the hotels (I will establish a function to get 3 photos)
+                    const photoResponse = async (i) => {
+                            const response = await googlePlacesClient.placePhoto({
+                                params:{
+                                    "photoreference": placeDetailsData.photos[i]?.photo_reference,
+                                    "maxheight":800,
+                                    "maxwidth":1000,
+                                    key: process.env.GOOGLE_API_KEY
+                                }
+                            })
+                            return response.data;
+                    }
+                    
+
+                    const photo1 = await photoResponse(0);
+                    const photo2 = await photoResponse(1);
+                    const photo3 = await photoResponse(2);
     
                     //now store all the details you need from the previous API call in seperate and clear named variables
                     const hotelPhone = placeDetailsData.international_phone_number? placeDetailsData.international_phone_number : null;
@@ -54,9 +72,16 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
                     const hotelWebsite = placeDetailsData.website? placeDetailsData.website : null;
                     const hotelFullName = placeDetailsData.name? placeDetailsData.name:null;
                     //getting 3 images to display in the frontend
-                    const hotelPhotoId1 = placeDetailsData.photos[0]?.photo_reference? placeDetailsData.photos[0].photo_reference : null;
-                    const hotelPhotoId2 = placeDetailsData.photos[1]?.photo_reference? placeDetailsData.photos[1].photo_reference : null;
-                    const hotelPhotoId3 = placeDetailsData.photos[2]?.photo_reference? placeDetailsData.photos[2].photo_reference : null;
+                    const hotelPhotoId1 = photo1? photo1 : null;
+                    const hotelPhotoId2 = photo2? photo2 : null;
+                    const hotelPhotoId3 = photo3? photo3 : null;
+
+                    //get the latitude and longitude of the hotel
+                    const hotelLat = placeDetailsData.geometry?.location?.lat? placeDetailsData.geometry.location.lat : 0;
+                    const hotelLon = placeDetailsData.geometry?.location?.lng? placeDetailsData.geometry.location.lng : 0;
+
+                    //getting the hotel icon
+                    const hotelIcon = placeDetailsData.icon? placeDetailsData.icon : null;
 
                     //returning everything I need
                     return{
@@ -67,7 +92,10 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
                         hotelFullName,
                         hotelPhotoId1,
                         hotelPhotoId2,
-                        hotelPhotoId3
+                        hotelPhotoId3,
+                        hotelLat,
+                        hotelLon,
+                        hotelIcon
                     }
     
                     //now we store the details we want in seperate variables
@@ -96,7 +124,10 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
             phone: allPlaceDetails.hotelPhone,
             address: allPlaceDetails.hotelAddress,
             googleMapLink: allPlaceDetails.googleMapsAddressLink,
-            websiteLink: allPlaceDetails.hotelWebsite
+            websiteLink: allPlaceDetails.hotelWebsite,
+            hotelLocationLat: allPlaceDetails.hotelLat,
+            hotelLocationLon: allPlaceDetails.hotelLon,
+            hotelIcon: allPlaceDetails.hotelIcon
         })
 
         //save the data in MongoDB (an addition here is that if the name of the hotel is not there do not save it)

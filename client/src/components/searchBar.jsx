@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsOpen } from '../reduxSlices/datePickerOpenCloseSlice.js';
+import { setIsClicked } from '../reduxSlices/searchButtonClickedSlice.js';
 import axios from 'axios';
 import {Autocomplete} from '@react-google-maps/api'
-
-
 
 const SearchBar = () => {
 
@@ -185,6 +184,7 @@ const SearchBar = () => {
     const handleSearchClick = async () => {
 
         setIsWhoDropdownOpen(false);
+        dispatch(setIsClicked(true));
         const Startdate = startDate;
         const Enddate = endDate;
 
@@ -251,13 +251,12 @@ const SearchBar = () => {
                 <input className="relative right-[-2px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Enter end date" value={endDate} readOnly/>
                 </button>
 
-            <div className="flex flex-row hover:bg-gray-100 px-5 py-2 w-[200px] rounded-subSearchBox">
+            <div className="flex flex-row hover:bg-gray-100 px-5 py-2 w-[180px] rounded-subSearchBox">
                 <button onClick={handlerWhoDropdownClick} className = "relative right-[50px] text-gray-700 font-normal text-sm" type="button">Who
                 <input className="relative right-[-58px] text-black focus:outline-none font-light focus:ring-0 hover:bg-gray-100" type="text" placeholder="Add guests" readOnly value={isGuestData}/>
                 </button>
-             
-            <div>
-                <div className = "relative right-[121px]">
+            </div>            
+                <div className = "relative right-[100px] top-2">
                 <button onClick={handleSearchClick}>
                 <svg className = "relative right-[-95px] top-[-3px] fill-sky-500 hover:fill-sky-700" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55px" height="55px" viewBox="0 0 25.334 25.334" xml:space="preserve"> <g><path d="M25.334,12.667c0,6.996-5.672,12.667-12.668,12.667C5.672,25.334,0,19.663,0,12.667S5.672,0,12.666,0,C19.662,0,25.334,5.671,25.334,12.667z"/></g></svg>
                 
@@ -266,8 +265,8 @@ const SearchBar = () => {
                 </svg>
                 </button>
                 </div>
-            </div>
-            </div>
+            
+
         </div>
         </div>
 

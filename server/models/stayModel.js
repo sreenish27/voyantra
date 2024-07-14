@@ -19,7 +19,10 @@ const staySchema = new mongoose.Schema({
     phone:{type: String},
     address:{type: String},
     googleMapLink:{type: String},
-    websiteLink:{type: String}
+    websiteLink:{type: String},
+    hotelLocationLat: {type: Number},
+    hotelLocationLon: {type: Number},
+    hotelIcon : {type: String}
     });
 
 export const Stay = mongoose.model('stay', staySchema);

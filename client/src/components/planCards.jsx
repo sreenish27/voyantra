@@ -1,23 +1,34 @@
 import React, {useState, useEffect} from 'react';
 // import fetchTripCardData from '../tripcardsdata';
 import axios from 'axios';
-import hotel1 from "../assets/hotel1.jpg";
-import hotel2 from "../assets/hotel2.jpg";
-import hotel3 from "../assets/hotel3.jpeg";
 import {GoogleMap, Marker} from '@react-google-maps/api'
+import { useSelector } from 'react-redux';
 
 const PlanCards = () => {
 
-
-   //where the map location should be by default
-   const mapDefaultLocation = {lat: 48.854, lng: 2.249};
     //to store the index of the card which is clicked
     const [isExpandedTripCardIndex, setIsExpandedTripCardIndex] = useState(null);
 
-    //to store the noOfStops of 
+    //creating an array to loop over the loading and pulsing cards (I want to display 20 of them by default)
+    const pulsingCardsArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+    //to get if the search button was clicked
+    const isSearchClicked = useSelector((state) => state.searchButtonClicked.isClicked);
+
+    //now storing that search click state in one more variable to control it better
+    const [isShouldPlanCardPulse, setIsShouldPlanCardPulse] = useState(isSearchClicked);
+ 
+    //using a useEffect to update the isShouldPlanCardPulse state everytime isSearchClicked changes
+    useEffect (() => {
+        setIsShouldPlanCardPulse(isSearchClicked);
+    }, [isSearchClicked]);
+    console.log(isShouldPlanCardPulse);
 
     //to store some trip info data for testing
     const [isTripData, setIsTripData] = useState([]);
+
+    //a marker to know the tripData was found (I am using 0 - when it should not exist(that is the pulsing cards should come only after search button is clicked), 1 - to get the pulsing cards, and 2 again it must go away)
+    const [isTripDataFound, setIsTripDataFound] = useState(0);
 
     const handleTripCardExpansion = (index) => {
         setIsExpandedTripCardIndex(prevIndex => prevIndex === index ? null : index);
@@ -44,25 +55,50 @@ const PlanCards = () => {
     },[isExpandedTripCardIndex]);
 
     //a useEffect to fill in info in the trip card
-    useEffect(() => {
+    console.log(isTripDataFound);
 
-        const tripCard_url = 'http://localhost:4000/api/testing/tripcards';
+        useEffect(() => {
+            if((isTripDataFound === 0 || isTripDataFound === 2) && isSearchClicked){
 
-      
+                const tripCardUrl = 'http://localhost:4000/api/testing/tripcards';
 
-            const getTripCardInfo = async () => {
-                try{
-                    const tripCardInfo = await axios.get(tripCard_url);
-                    const tripCardArrayData = tripCardInfo.data;
-                    setIsTripData(tripCardArrayData);
-                    console.log(tripCardArrayData);
-                } catch(err){
-                    console.log(`Error in getting the trip card data: ${err}`);
+                const planCardData = async () => {
+                    try{
+                        const tripCardInfo = await axios.get(tripCardUrl);
+                        const tripCardArray = tripCardInfo.data;
+                        console.log(tripCardArray.length);
+                        if(tripCardArray.length > 1 && tripCardArray.length === tripCardArray[0].noOfTripCards){
+                            setIsTripData(tripCardArray);
+                            setIsTripDataFound(1);
+                            return true;
+                    }
+                    return false;
+                    }catch(err){
+                        console.log(`Error in getting the tripcard info: ${err}`);
+                    }
+                    
                 }
-            }
-            getTripCardInfo();
+            
+                    //this is a set timer in place to make sure the tripdata comes to the front-end the moment it is populated inside mongoDB
+                const tripRetreivalIntervalID = setInterval(async () => {
+                    const tripDataFound = await planCardData();                   
+                    if(tripDataFound){
+                        clearInterval(tripRetreivalIntervalID);
+                    }
+                },5000);
 
-    },[]);
+                //this return statement makes sure that the component is unmounted to avoid process overhead(atleast that's what I think is happening)
+                return () => {
+                    clearInterval(tripRetreivalIntervalID);
+                    setIsTripDataFound(2);
+                    setIsShouldPlanCardPulse(false);
+                } 
+
+            }
+                                 
+                  
+    }, [isTripDataFound, isSearchClicked]);
+    
 
     //a small function to take care the visual rating stars reflect the actual ratings down to fractions
     const starRatingsReflector = (hotelRating) => {
@@ -82,9 +118,39 @@ const PlanCards = () => {
         return result;
         }
 
+        //a function to extract the base64 string for the hotel images and create a image url which will go directly into the src in my img tags for the hotel images rendering
+        const hotelImageBase64Extractor = (base64String) => {
+
+            const base64ExtractedString = base64String.toString('base64');
+            const imgUrl = `data:image/jpeg;base64,${base64ExtractedString}`;
+            return imgUrl;
+
+        }
+
 
     return(
         <>
+        {/* I will show the pulsing of a bunch of cards to indicate loading while the users wait */}
+        {isShouldPlanCardPulse && (
+        <div className = "grid gap-y-[60px] mx-[250px] grid-cols-4 ml-[-150px]">
+     
+        {pulsingCardsArray.map((index) => (  
+            <div key={index} className="relative top-[160px] right-[-220px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md">
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-64 mt-14 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-64 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-48 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-48 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-64 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-64 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-64 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-48 mt-2 ml-5 animate-pulse"></div>
+                <div class="h-2.5 bg-gray-100 rounded-full dark:bg-gray-300 w-48 mt-2 ml-5 animate-pulse"></div>
+            </div>
+        ))}
+        </div>
+
+        )}
+        
 
         {/* Below is an entire trip card format which I will use to render all the tripcards */}
         {isTripData.length > 0 && (
@@ -95,7 +161,31 @@ const PlanCards = () => {
             <div key={index}>
 
                 <button onClick = {() => handleTripCardExpansion(index)} className="relative hover:bg-gray-100 top-[160px] right-[-220px] ring-1 ring-black ring-opacity-5 w-[300px] h-[250px] text-gray-700 font-normal rounded-lg shadow-md" type='button'>
-                    Plan Card {index + 1}
+                    <div className='mr-52 mt-5 text-[20px] font-semibold text-sky-500'>Flight</div>
+                    <div className='-ml-[61px] mt-3 w-52 font-semibold text-sm'>Depart: 
+                    <div className="font-normal -mt-5 ml-[67px] w-64">{tripData.flight.originCity} → {tripData.flight.destinationCity},</div>
+                    <div className="font-normal ml-60 text-[12px] w-32 -mt-5">{tripData.flight.departingFlights.noOfStops} stops · {tripData.flight.departingFlights.totalTime}</div>
+                    </div>
+                    <div className='-ml-[61px] mt-1 w-52 font-semibold text-sm'>Return: 
+                    <div className="font-normal -mt-5 ml-[67px] w-64">{tripData.flight.destinationCity} → {tripData.flight.originCity},</div>
+                    <div className="font-normal ml-[243px] text-[12px] w-32 -mt-5">{tripData.flight.returningFlights.noOfStops} stops · {tripData.flight.returningFlights.totalTime}</div>
+                    </div>
+                    <div className='mr-52 mt-2 text-[20px] font-semibold text-sky-500'>Stay</div>
+                    <div className='relative text-sm font-[500] w-64 mt-2 ml-1'>{tripData.stay.name}</div>
+                    <div class="flex items-center p-8 -mt-8 -ml-2">
+                            <svg class="w-6 h-6 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20">
+                            <defs>
+                                <linearGradient id="star-gradient-1">
+                                    <stop offset={`${100 * starRatingsReflector(tripData.stay.averageRatings)[0]}%`}stopColor="#fde047" />
+                                    <stop offset={`${100 * (1 - starRatingsReflector(tripData.stay.averageRatings)[0])}%`} stopColor="#666666"/>
+                                </linearGradient>
+                            </defs>
+                                <path fill="url(#star-gradient-1)" d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                            </svg>
+                            <div className=''>{tripData.stay.averageRatings}</div>
+                        </div>
+                        
+                        <div className='font-semibold -mt-9 ml-40 text-[22px] text-sky-500'>${(Number(tripData.flight.totalFlightPrice) + Number(tripData.stay.totalPrice)).toFixed(2)}</div>
                 </button>
 
 
@@ -408,10 +498,10 @@ const PlanCards = () => {
 
                     {/* this is where all the stay data starts */}
                     <div className = "flex flex-col -mt-[1350px]">
-                    <div className = "font-bold px-8 text-[24px]">{tripData.stay.name}</div>
-                        <img className = "p-8" src = {hotel1} alt="la" style= {{width:"540px", height:"460px"}} />
-                        <img className = "ml-[530px] -mt-[427px]" src = {hotel2} alt="la" style= {{width:"240px", height:"190px"}} />
-                        <img className = "ml-[530px] mt-5" src = {hotel3} alt="la" style= {{width:"240px", height:"190px"}} />
+                    <a href={tripData.stay.websiteLink} target="_blank" rel="noopener noreferrer" className = "font-bold px-8 text-[24px] hover:text-sky-600">{tripData.stay.name}</a>
+                        <img className = "p-8" src = {hotelImageBase64Extractor(tripData.stay.image1)} alt="la" style= {{width:"540px", height:"460px"}} />
+                        <img className = "ml-[530px] -mt-[427px]" src = {hotelImageBase64Extractor(tripData.stay.image2)} alt="la" style= {{width:"240px", height:"190px"}} />
+                        <img className = "ml-[530px] mt-5" src = {hotelImageBase64Extractor(tripData.stay.image3)} alt="la" style= {{width:"240px", height:"190px"}} />
 
                         <div class="flex items-center p-8">
                             <svg class="w-8 h-8 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20">
@@ -585,10 +675,12 @@ const PlanCards = () => {
                                 
                                 <div className = "ml-[10px] mt-11">Explore nearby Places</div>
                                 <div className = "w-[700px] h-72 ml-[15px] mt-7">
-                                    <GoogleMap center={mapDefaultLocation} zoom={12} mapContainerStyle={{width: "100%", height: "100%"}}>
-                                    <Marker position={mapDefaultLocation}></Marker>
+                                    <GoogleMap center={{lat: tripData.stay.hotelLocationLat, lng: tripData.stay.hotelLocationLon}} zoom={16} mapContainerStyle={{width: "100%", height: "100%"}}>
+                                    <Marker position={{lat: tripData.stay.hotelLocationLat, lng: tripData.stay.hotelLocationLon}}></Marker>
                                     </GoogleMap>
                                 </div>
+                                <div className = "ml-[10px] mt-11 font-medium text-sm">Phone: {tripData.stay.phone}</div>
+                                <div className = "ml-[10px] font-medium text-sm">{tripData.stay.address}</div>
                                 </div>
 
                                 

@@ -7,9 +7,4 @@ const fetchTripCardData = async () => {
     return response.data;
 }
 
-// const testdata = await fetchTripCardData();
-
-// console.log(testdata);
-
-// export const tripcards = await fetchTripCardData();
 export default fetchTripCardData;

@@ -40,7 +40,9 @@ app.use(session({
 //establishing a connection to mongoDB
 try {
     mongoose.connect(DB_CONNECTION, {
-        socketTimeoutMS: 30000
+        socketTimeoutMS: 240000,
+        connectTimeoutMS: 240000,
+        serverSelectionTimeoutMS: 240000,
     }).then(() => {
         console.log("Connected to MongoDB!");
         app.listen(PORT, () => {

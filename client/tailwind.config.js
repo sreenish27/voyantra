@@ -20,7 +20,7 @@ export default {
       },
       padding: {
         '120': '30rem',
-      },
+      }
     },
   },
   plugins: [],
