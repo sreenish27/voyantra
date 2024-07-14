@@ -40,6 +40,13 @@ app.use(session({
     secret: 'aSdh576&*6',
     saveUninitialized: true, // Changed to true for testing
     resave: false,
+    store: MongoStore.create({
+        mongoUrl: DB_CONNECTION,
+        collectionName: "sessions",
+        ttl: 60 * 60 * 2, // 2 hours
+        autoRemove: 'interval',
+        autoRemoveInterval: 10 // In minutes
+    }),
     cookie: {
         maxAge: 60000 * 60 * 2,
         sameSite: 'none',
