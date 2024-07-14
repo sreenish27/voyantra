@@ -21,7 +21,7 @@ export const app = express();
 
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: "https://voyantra-client.vercel.app" || "http://localhost:3000",
     credentials:true //because I am using sessions
 }));
 
