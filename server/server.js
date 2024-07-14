@@ -20,9 +20,19 @@ import session from 'express-session';
 export const app = express();
 
 
+const allowedOrigins = ['https://voyantra-client.vercel.app', 'http://localhost:3000'];
+
 app.use(cors({
-    origin: "https://voyantra-client.vercel.app" || "http://localhost:3000",
-    credentials:true //because I am using sessions
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
