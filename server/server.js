@@ -20,12 +20,17 @@ import session from 'express-session';
 export const app = express();
 
 
-app.use(cors({
+const corsOptions = cors({
     origin: 'https://voyantra-client.vercel.app',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}));
+});
+
+app.use(corsOptions);
+
+//for preflight request
+app.use('*', corsOptions);
 
 app.use(express.json());
 
