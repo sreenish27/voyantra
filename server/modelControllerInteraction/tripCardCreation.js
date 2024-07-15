@@ -27,12 +27,6 @@ const allTripCards = async (sessionid) => {
     //creating a total number of tripcards metric to use it in client side to get all the cards accurately
     const totalNoOfTripCards = flightsArrayLength * stayArrayLength;
 
-    // //the total price of the trip (adding stay and flight total price)
-    // const totalPrice = (flightObject, stayObject) => {
-    //     const price = Number(flightObject.totalFlightPrice) + Number(stayObject.totalPrice);
-    //     return price;
-    // }
-
     //a function to create the tripCard object which will later be used to created multiple cards
     const tripCardDataCreation = async (flightObject, stayObject) => {
 

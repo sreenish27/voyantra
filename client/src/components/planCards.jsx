@@ -90,7 +90,6 @@ const PlanCards = () => {
                 //this return statement makes sure that the component is unmounted to avoid process overhead(atleast that's what I think is happening)
                 return () => {
                     clearInterval(tripRetreivalIntervalID);
-                    setIsTripDataFound(2);
                     setIsShouldPlanCardPulse(false);
                 } 
 
