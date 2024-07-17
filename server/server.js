@@ -100,10 +100,8 @@ app.post('/api/userInput', async (req, res) => {
     req.session.userinput = req.body;
     
     try{
-        console.time(`Start of getting and processing user input`)
         setApiReadyInput(processUserInput(JSON.stringify(req.session.userinput)));
         console.log(getApiReadyUserInput());
-        console.timeEnd(`End of getting and processing user input`)
 
     } catch(err){
         console.log(`Error in processing user input: ${err}`);
