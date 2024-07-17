@@ -116,24 +116,14 @@ app.post('/api/userInput', async (req, res) => {
 
     //this is the part where the flight data gets stored
     const flight_output = await FlightDataController(req.session.processedInput);
-    console.time(flight_output);
-    console.timeEnd(flight_output);
     storeAllTierFlightData(flight_output, sessionId);
-    console.time(storeAllTierFlightData);
-    console.timeEnd(storeAllTierFlightData);
 
     //the part where stay data gets stored
     const stay_output = await StayDataController(req.session.processedInput);
-    console.time(stay_output);
-    console.timeEnd(stay_output);
     storeAllTierStayData(stay_output, sessionId);
-    console.time(storeAllTierStayData);
-    console.timeEnd(storeAllTierStayData);
 
     //the part where trip cards are created
     await allTripCards(sessionId);
-    console.time(allTripCards);
-    console.timeEnd(allTripCards);
 
     //checking if I am getting the trip card data and also setting up the endpoint for tripcards which will be used to get the data in client-side (moving this inside my post request for 2 reasons, to use the session id correctly and to trigger it immedietly as the search button is clicked)
     app.get('/api/testing/tripcards', async(req, res) => {
