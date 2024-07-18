@@ -16,7 +16,7 @@ export const AMADEUS_SECRET_KEY = process.env.AMADEUS_CLIENT_SECRET;
 export const amadeusObj = new Amadeus ({
     clientId:AMADEUS_USER_ID,
     clientSecret:AMADEUS_SECRET_KEY,
-    hostname: "production",
+    // hostname: "production",
 });
 
 //exporting the google api key
