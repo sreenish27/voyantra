@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-// import fetchTripCardData from '../tripcardsdata';
 import axios from 'axios';
 import {GoogleMap, Marker} from '@react-google-maps/api'
 import { useSelector } from 'react-redux';
