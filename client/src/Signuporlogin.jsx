@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Signuporlogin = () => {
+const SignUpOrLogin = () => {
     return(
         <div>signuporloginbaby</div>
     );
 };
 
-export default Signuporlogin;
+export default SignUpOrLogin;
