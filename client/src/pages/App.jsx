@@ -1,8 +1,8 @@
 import React from 'react';
-import NavBar from './components/navBar.jsx';
-import SearchBar from './components/searchBar.jsx';
-import PlanCards from './components/planCards.jsx';
-import DatePickerToggle from './components/datePickerToggle.jsx';
+import NavBar from '../components/navBar.jsx';
+import SearchBar from '../components/searchBar.jsx';
+import PlanCards from '../components/planCards.jsx';
+import DatePickerToggle from '../components/datePickerToggle.jsx';
 import {useJsApiLoader} from '@react-google-maps/api'
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from '@vercel/speed-insights/react';

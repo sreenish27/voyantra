@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
 
@@ -127,8 +128,8 @@ z"/>
                 {isDropdownOpen && (
                     <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-300 rounded-custom bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                     <div className = "py-1" role="none">
-                        <a href="#" className="text-gray-700 font-normal hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex = "-1" id="menu-item-0">Sign up</a>
-                        <a href="#" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex = "-1" id = "menu-item-1">Log in</a>
+                        <Link to="/signup" className="text-gray-700 font-normal hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex = "-1" id="menu-item-0">Sign up</Link>
+                        <Link to="/login" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex = "-1" id = "menu-item-1">Log in</Link>
                     </div>
                     <div className = "py-1" role="none">
                         <a href="#" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">Premium ⚡</a>

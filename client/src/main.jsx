@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store.js';
-import App from './App.jsx';
-import SignUp from './SignUp.jsx';
+import App from './pages/App.jsx';
+import SignUp from './pages/SignUp.jsx';
+import Login from './pages/Login.jsx';
 import './index.css';
 
 //creating my client side routing
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignUp/>,
+  },
+  {
+    path: '/login',
+    element: <Login/>
   }
 ]);
 
