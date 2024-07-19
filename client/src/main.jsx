@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store.js';
 import App from './App.jsx';
-import Signuporlogin from './signupLogin.jsx';
+import Signuporlogin from './Signuporlogin.jsx';
 import './index.css';
 
 //creating my client side routing
