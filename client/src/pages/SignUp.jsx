@@ -9,7 +9,7 @@ const SignUp = () => {
       <div className="w-full max-w-md">
         <h1 className="text-4xl font-bold text-center mb-8">Sign up to start your voyage</h1>
         
-        <form className="space-y-4">
+        <div className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
               Email address
@@ -21,14 +21,17 @@ const SignUp = () => {
               className="w-full p-3 border border-gray-300 rounded-md"
             />
           </div>
-          
-          <button
-            type="submit"
-            className="w-full bg-sky-500 text-white py-3 rounded-full font-semibold hover:bg-sky-600 transition duration-300"
+          <Link
+          to="/signup/multistep"
           >
-            Next
-          </button>
-        </form>
+          <div className="w-full bg-sky-500 mt-2 text-white py-3 rounded-full font-semibold hover:bg-sky-600 transition duration-300">
+          
+            <div className="ml-48">Next</div>
+          
+          </div>
+          </Link>
+          
+        </div>
         
         <div className="my-6 text-center">
           <span className="px-4 bg-white relative z-10">or</span>

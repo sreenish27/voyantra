@@ -7,6 +7,7 @@ import App from './pages/App.jsx';
 import SignUp from './pages/SignUp.jsx';
 import Login from './pages/Login.jsx';
 import './index.css';
+import MultiStepSignUp from './pages/MultiStepSignUp.jsx';
 
 //creating my client side routing
 const router = createBrowserRouter([
@@ -20,7 +21,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login/>
+    element: <Login/>,
+  },
+  {
+    path: 'signup/multistep',
+    element: <MultiStepSignUp/>,
   }
 ]);
 

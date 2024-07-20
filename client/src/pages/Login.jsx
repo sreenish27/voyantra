@@ -9,7 +9,7 @@ const Login = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white text-black p-4">
       <div className="w-full max-w-md">
-        <h1 className="text-4xl font-bold text-center mb-8">Log in to Your Account</h1>
+        <h1 className="text-4xl font-bold text-center mb-8">Log in to Voyantra</h1>
         
         <div className="space-y-4 mb-8">
           <button className="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-gray-300 rounded-full hover:bg-gray-50 transition duration-300">
