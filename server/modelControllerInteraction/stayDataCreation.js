@@ -139,15 +139,7 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
             } 
         
 }        
-    
-      
 
-<<<<<<< HEAD
-//To give variety in the kind of hotels
-
-
-=======
->>>>>>> 02829160a11a1a111d12747f13ee4c11925e875b
 //the below is to store 5 stay objects in MongoDB
 const storeAllTierStayData = async (stayControllerData, sessionid) => {
 
