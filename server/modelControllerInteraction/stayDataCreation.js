@@ -138,17 +138,14 @@ const StayDataCreation = async (stayControllerData, k, sessionid) => {
                 console.log(`Error in trying to save the new stay data: ${err}`);
             } 
         
-}        
-    
-      
-
-//To give variety in the kind of hotels
-const noOfStayData = 5;
+} 
 
 //the below is to store 5 stay objects in MongoDB
 const storeAllTierStayData = async (stayControllerData, sessionid) => {
 
-    for(let i=0; i<noOfStayData; i++){
+    let stayDataLen = stayControllerData.stayAllData.data.length > 5 ? 5 : stayControllerData.stayAllData.data.length
+
+    for(let i=0; i<stayDataLen; i++){
        await StayDataCreation(stayControllerData, i, sessionid);
     }
     
