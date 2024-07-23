@@ -7,7 +7,7 @@ const staySchema = new mongoose.Schema({
     checkOutTime: { type: Date},
     amenities: [String],
     numberOfBeds: { type: Number },
-    bedType: {type:String},
+    bedType: { type: String },
     numberOfGuests: { type: Number},
     totalPrice: { type: Number},
     averageRatings: { type: Number},

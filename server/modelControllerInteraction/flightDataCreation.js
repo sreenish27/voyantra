@@ -164,10 +164,13 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
 //I want Economy, Premium Economy, Business, First Class (so 4 - this is a placholder, I will establish how to select later)\
 const noOfFlightData = 5;
 
-//the below is to store 4 flight objects in MongoDB
+//the below is to store 5 or less flight objects in MongoDB
 const storeAllTierFlightData = async (flightControllerData, sessionid) => {
 
-    for(let i=0; i<noOfFlightData; i++){
+    let lenOfFlightData = flightControllerData.data.length > 5 
+                        ? 5 : flightControllerData.data.length;
+
+    for(let i=0; i<lenOfFlightData; i++){
        await FlightDataCreation(flightControllerData, i, sessionid);
     }
     
