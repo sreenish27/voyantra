@@ -120,7 +120,6 @@ app.post('/api/userInput', async (req, res) => {
 
     //the part where stay data gets stored
     const stay_output = await StayDataController(req.session.processedInput);
-    console.log(stay_output.stayAllData);
     storeAllTierStayData(stay_output, sessionId);
 
     //the part where trip cards are created
@@ -189,10 +188,3 @@ app.get(`/api/testing/airlinelogo/:iatacode`, async (req, res) => {
         res.response(500).send({err: err.message});
     }
 })
-
-
-
-
-
-
-
