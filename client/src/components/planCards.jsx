@@ -23,7 +23,6 @@ const PlanCards = () => {
     useEffect (() => {
         setIsShouldPlanCardPulse(isSearchClicked);
     }, [isSearchClicked]);
-    console.log(isShouldPlanCardPulse);
 
     //to store some trip info data for testing
     const [isTripData, setIsTripData] = useState([]);
@@ -61,8 +60,7 @@ const PlanCards = () => {
         useEffect(() => {
             if((isTripDataFound === 0 || isTripDataFound === 2) && isSearchClicked){
 
-                const tripCardUrl = Server_url + '/api/testing/tripcards';
-                console.log(tripCardUrl);
+                const tripCardUrl = `https://voyantra.onrender.com/api/testing/tripcards`;
 
                 const planCardData = async () => {
                     try{
