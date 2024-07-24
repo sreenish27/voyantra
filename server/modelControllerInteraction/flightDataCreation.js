@@ -1,5 +1,6 @@
 import { Flight } from "../models/flightModel.js";
 import moment from "moment";
+import { Server_url } from '../config.js';
 
 const FlightDataCreation = async (flightControllerData, k, sessionid) => {
 
@@ -23,7 +24,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
 
     const getAirlineData = async (iataCode) => {
 
-        const airlineUrl = `http://localhost:4000/api/testing/airline/${iataCode}`;
+        const airlineUrl = `${Server_url}/api/testing/airline/${iataCode}`;
         const response = await fetch(airlineUrl);
         const airlineName = response.text();
         return airlineName;
@@ -31,7 +32,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
 
     const getAirportData = async (iataCode) => {
 
-        const airportUrl = `http://localhost:4000/api/testing/airport/${iataCode}`;
+        const airportUrl = `${Server_url}/api/testing/airport/${iataCode}`;
         const response = await fetch(airportUrl);
         const airportName = response.text();
         const airport = airportName;
@@ -39,7 +40,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
     }
 
     const getCityData = async (iataCode) => {
-        const cityUrl = `http://localhost:4000/api/testing/city/${iataCode}`;
+        const cityUrl = `${Server_url}/api/testing/city/${iataCode}`;
         const response = await fetch(cityUrl);
         const cityName = response.text();
         const city = cityName;
@@ -79,7 +80,7 @@ const FlightDataCreation = async (flightControllerData, k, sessionid) => {
     //function to get the base64 string which will be converted to image of airline logo, based on IATA code
     const getAirlineLogo = async (iataCode) => {
 
-        const airlineLogoUrl = `http://localhost:4000/api/testing/airlinelogo/${iataCode}`;
+        const airlineLogoUrl = `${Server_url}/testing/airlinelogo/${iataCode}`;
         const response = await fetch(airlineLogoUrl);
         const airlineLogoString = response.text();
         return airlineLogoString;

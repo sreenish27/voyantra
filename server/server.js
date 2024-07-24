@@ -16,13 +16,12 @@ import fetchAirlineLogo from './createdApis/airlineLogosApi.js';
 import fetchCityData from './createdApis/cityApi.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-
+import { Client_url } from './config.js';
 
 export const app = express();
 
-
 const corsOptions = cors({
-    origin: 'https://voyantra-client.vercel.app',
+    origin: Client_url,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

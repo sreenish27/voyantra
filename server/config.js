@@ -7,6 +7,8 @@ dotenv.config();
 export const DB_CONNECTION = process.env.DB_URI;
 export const flight_DB_CONNECTION = process.env.flight_DB_URI;
 export const PORT = process.env.PORT;
+export const Client_url = process.env.FRONTEND_URL;
+export const Server_url = process.env.BACKEND_URL;
 
 //Amadeus details
 export const AMADEUS_USER_ID = process.env.AMADEUS_CLIENT_ID;

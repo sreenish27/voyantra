@@ -132,7 +132,7 @@ z"/>
                         <Link to="/login" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex = "-1" id = "menu-item-1">Log in</Link>
                     </div>
                     <div className = "py-1" role="none">
-                        <a href="#" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">Premium ⚡</a>
+                        <a href="#" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">My Trips</a>
                         <a href="#" className = "text-gray-700 font-light hover:bg-gray-100 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Support</a>
                     </div>
                         

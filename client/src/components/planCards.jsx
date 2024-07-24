@@ -3,6 +3,8 @@ import axios from 'axios';
 import {GoogleMap, Marker} from '@react-google-maps/api'
 import { useSelector } from 'react-redux';
 
+const Server_url = process.env.REACT_APP_BACKEND_URL;
+
 const PlanCards = () => {
 
     //to store the index of the card which is clicked
@@ -59,7 +61,8 @@ const PlanCards = () => {
         useEffect(() => {
             if((isTripDataFound === 0 || isTripDataFound === 2) && isSearchClicked){
 
-                const tripCardUrl = `https://voyantra.onrender.com/api/testing/tripcards`;
+                const tripCardUrl = Server_url + '/api/testing/tripcards';
+                console.log(tripCardUrl);
 
                 const planCardData = async () => {
                     try{
