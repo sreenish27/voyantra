@@ -60,7 +60,7 @@ const PlanCards = () => {
         useEffect(() => {
             if((isTripDataFound === 0 || isTripDataFound === 2) && isSearchClicked){
 
-                const tripCardUrl = `https://${Server_url}/api/testing/tripcards`;
+                const tripCardUrl = `${Server_url}/api/testing/tripcards`;
 
                 const planCardData = async () => {
                     try{
